@@ -1,0 +1,160 @@
+﻿{include file="Public:meta"}
+
+<style type="text/css">
+.attest p{margin: 0 auto; text-align: left;}
+</style>
+
+<title>banner列表</title>
+</head>
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 会员管理 <span class="c-gray en">&gt;</span> 会员列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container">
+	<div class="mt-20">
+		<table class="table table-border table-bordered table-bg table-hover table-sort">
+			<thead>
+				<tr class="text-c">
+					<!-- <th width="40"><input name="" type="checkbox" value=""></th> -->
+					<th width="20">UID</th>
+					<th width="40">头像</th>
+					<th width="60">昵称</th>
+					<th width="50">认证信息</th>
+					<th width="60">加入时间</th>
+					<th width="60">微信openid</th>
+					<th width="20">状态</th>
+					<th width="20">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				{foreach name="data" item="v" key="k"}
+					<tr class="text-c">
+						<td>{$v.id}</td>
+						<td><img width="40" class="picture-thumb" src="{$v.photo}"></td>
+						<td class="text-l">
+							{$v.nickname}
+							{if $v.identity == 1}
+								<span class="c-red">（讲师）</span>
+							{/if}
+						</td>
+						<td class="text-c attest">
+							{if $v.name}
+								<p>
+									姓&nbsp;&nbsp;&nbsp;名：{$v.name}
+									{if $v.attest == 1}
+										<span class="c-red">申请认证</span>
+									{elseif $v.attest == 2}
+										<span class="c-green">已认证</span>
+									{elseif $v.attest == -1}
+										<span class="c-red">认证失败</span>
+									{/if}
+								</p>
+							{/if}
+							{if $v.tel}<p>手机号：{$v.tel}</p>{/if}
+							{if $v.ID_card}<p>身份证：{$v.ID_card}</p>{/if}
+						</td>
+						<td>{$v.create_time}</td>
+						<td>{$v.openid}</td>
+						<td class="td-status">
+							{if $v.is_del == 0}
+								<span class="label label-success radius">正常</span>
+							{else}
+								<span class="label label-danger radius">封号</span>
+							{/if}
+						</td>
+						<td class="td-manage">
+							{if $v.is_del == 0}
+								<a style="text-decoration:none" onClick="stop(this,'onOff.html?id={$v.id}&is_del=1')" href="javascript:;" title="封号">
+									<i class="Hui-iconfont" style="font-size:20px;">&#xe6de;</i>
+								</a> 
+							{else}
+								<a style="text-decoration:none" onClick="start(this,'onOff.html?id={$v.id}&is_del=0')" href="javascript:;" title="解封">
+									<i class="Hui-iconfont" style="font-size:20px;">&#xe6dc;</i>
+								</a> 
+							{/if}
+						</td>
+					</tr>
+				{/foreach}
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<!--_footer 作为公共模版分离出去-->
+{include file="Public:footer"}
+<!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="__STATIC__/../Admin/lib/My97DatePicker/4.8/WdatePicker.js"></script> 
+<script type="text/javascript" src="__STATIC__/../Admin/lib/datatables/1.10.0/jquery.dataTables.min.js"></script> 
+<script type="text/javascript" src="__STATIC__/../Admin/lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript">
+$('.table-sort').dataTable({
+	"aaSorting": [[ 1, "desc" ]],//默认第几个排序
+	"bStateSave": true,//状态保存
+    "aLengthMenu": [[5, 10, 20, -1], [5, 10, 20, "All"]],//指定每页显示条
+	"aoColumnDefs": [
+	  // {"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
+	  // {"orderable":false,"aTargets":[0,8]}// 制定列不参与排序
+	]
+});
+
+/*直播-关闭*/
+function stop(obj,url,id){
+	layer.confirm('确认要关闭吗？',function(index){
+		$.ajax({
+			type: 		'POST',
+			url: 		url,
+			dataType: 	'json',
+			success:function(data){
+				if(data.status == 200){
+					layer.msg(data.msg,{icon: 6,time:1000});
+					location.replace(location.href);
+				}else{
+					layer.msg(data.msg,{icon: 5,time:1000});
+					location.replace(location.href);
+				}
+			}
+		});
+	});
+}
+
+/*直播-开启*/
+function start(obj,url,id){
+	layer.confirm('确认要开启吗？',function(index){
+		$.ajax({
+			type: 		'POST',
+			url: 		url,
+			dataType: 	'json',
+			success:function(data){
+				if(data.status == 200){
+					layer.msg(data.msg,{icon: 6,time:1000});
+					location.replace(location.href);
+				}else{
+					layer.msg(data.msg,{icon: 5,time:1000});
+					location.replace(location.href);
+				}
+			}
+		});	
+	});
+}
+
+/*直播-删除*/
+function del(obj,id){
+	layer.confirm('确认要删除吗？',function(index){
+		$.ajax({
+			type: 'POST',
+			url:id,
+			dataType: 'json',
+			success: function(data){
+				if(data.status == 200){
+					$(obj).parents("tr").remove();
+					layer.msg(data.msg,{icon:6,time:1000});
+				}else{
+					layer.msg(data.msg,{icon:5,time:1000});
+				}
+			}
+		});		
+	});
+}
+</script>
+</body>
+</html>

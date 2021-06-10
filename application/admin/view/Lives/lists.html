@@ -1,0 +1,168 @@
+﻿{include file="Public:meta"}
+
+<title>banner列表</title>
+</head>
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 直播管理 <span class="c-gray en">&gt;</span> 直播列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container">
+	<div class="mt-20">
+		<table class="table table-border table-bordered table-bg table-hover table-sort">
+			<thead>
+				<tr class="text-c">
+					<!-- <th width="40"><input name="" type="checkbox" value=""></th> -->
+					<th width="20">直播间ID</th>
+					<th width="60">图片</th>
+					<th width="150">标题</th>
+					<th width="50">分类</th>
+					<th width="30">主讲嘉宾</th>
+					<th width="60">开讲时间</th>
+					<th width="60">创建时间</th>
+					<th width="20">推荐</th>
+					<th width="20">状态</th>
+					<th width="50">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				{foreach name="data" item="v" key="k"}
+					<tr class="text-c">
+						<td>{$v.id}</td>
+						<td><img width="80" class="picture-thumb" src="{$v.cover_pic}"></td>
+						<td class="text-l">
+							{$v.title}
+							{if $v.price==0}
+								<span class="c-red">免费</span>
+							{else}
+								<span class="c-red">{$v.price} 元</span>
+							{/if}
+						</td>
+						<td class="text-c">{$v.gname} / {$v.cname}</td>
+						<td class="text-c">{$v.author}</td>
+						<td>{$v.begin_time|date="Y-m-d H-m-s",###}</td>
+						<td>{$v.create_time|date="Y-m-d H-m-s",###}</td>
+						<td class="td-status">
+							{if $v.is_recomm == 0}
+								<a onclick="Recomm('{$v.id}',1)" href="javascript:;" title="点击推荐" class="btn btn-warning-outline radius">
+									未推荐
+								</a>
+							{elseif $v.is_recomm == 1}
+								<a onclick="Recomm('{$v.id}',0)" href="javascript:;" title="取消推荐" class="btn btn-success radius">
+									推荐中
+								</a>
+							{/if}
+						</td>
+						<td class="td-status">
+							{if $v.is_show == 1}
+								<a onclick="onOff('{$v.id}',0)" href="javascript:;" title="关闭" class="btn btn-success radius">已开启</a> 
+							{else}
+								<a onclick="onOff('{$v.id}',1)" href="javascript:;" title="开启" class="btn btn-warning-outline radius">已关闭</a> 
+							{/if}
+						</td>
+						<td class="td-manage">
+							<a style="text-decoration:none" class="ml-5" onclick="del('{$v.id}')" href="javascript:;" title="删除">
+								<i class="Hui-iconfont" style="font-size:20px;">&#xe6e2;</i>
+							</a>
+						</td>
+					</tr>
+				{/foreach}
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<!--_footer 作为公共模版分离出去-->
+{include file="Public:footer"}
+<!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="__STATIC__/../Admin/lib/My97DatePicker/4.8/WdatePicker.js"></script> 
+<script type="text/javascript" src="__STATIC__/../Admin/lib/datatables/1.10.0/jquery.dataTables.min.js"></script> 
+<script type="text/javascript" src="__STATIC__/../Admin/lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript">
+$('.table-sort').dataTable({
+	"aaSorting": [[ 1, "desc" ]],//默认第几个排序
+	"bStateSave": true,//状态保存
+    "aLengthMenu": [[5, 10, 20, -1], [5, 10, 20, "All"]],//指定每页显示条
+	"aoColumnDefs": [
+	  // {"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
+	  // {"orderable":false,"aTargets":[0,8]}// 制定列不参与排序
+	]
+});
+
+/*直播-关闭*/
+function Recomm(id,recomm=1){
+
+	if(id > 0){
+          
+        $.post("{:url('lives/recomment')}",{id:id,is_recomm:recomm},function (res) {
+
+            if(res.code == 1){
+            	layer.msg(res.msg,{icon:1,time:1000});
+            } else {
+            	layer.msg(res.msg,{icon:2,time:1000});
+            }
+            
+            setTimeout(function () {
+                location.replace(location.href);
+            }, 2000);
+
+        });
+
+    }else {
+    	layer.msg('参数有误',{icon:7,time:1000});
+    }
+
+}
+
+// 开启、关闭
+function onOff(id , is_show=0)
+{
+    if(id > 0){
+          
+        $.post("{:url('lives/onOff')}",{id:id,is_show:is_show},function (res) {
+
+            if(res.code == 1){
+            	layer.msg(res.msg,{icon:1,time:1000});
+            } else {
+            	layer.msg(res.msg,{icon:2,time:1000});
+            }
+            
+            setTimeout(function () {
+                location.replace(location.href);
+            }, 2000);
+
+        });
+
+    }else {
+    	layer.msg('参数有误',{icon:7,time:1000});
+    }
+
+}
+
+// 删除
+function del(id)
+{
+    if(id > 0){
+          
+        $.post("{:url('lives/del')}",{id:id},function (res) {
+
+            if(res.code == 1){
+            	layer.msg(res.msg,{icon:1,time:1000});
+            } else {
+            	layer.msg(res.msg,{icon:2,time:1000});
+            }
+            
+            setTimeout(function () {
+                location.replace(location.href);
+            }, 2000);
+
+        });
+
+    }else {
+    	layer.msg('参数有误',{icon:7,time:1000});
+    }
+
+}
+
+</script>
+</body>
+</html>

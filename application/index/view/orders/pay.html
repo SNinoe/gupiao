@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<style>
+    b{
+        margin-top: ;
+    }
+</style>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body style="text-align: center;">
+
+<button onclick="callpay()">购买</button>
+  <script type="text/javascript">
+        //调用微信JS api 支付
+            function jsApiCall()
+            {
+                WeixinJSBridge.invoke(
+                        'getBrandWCPayRequest',
+                        {$jsApiParameters},
+                function(res){
+                    if(res.err_msg == "get_brand_wcpay_request:ok" ) {
+                        //使用以上方式判断前端返回,微信团队郑重提示：
+                        // res.err_msg将在用户支付成功后返回
+                        //  ok，但并不保证它绝对可靠。
+                        //跳转页面window.localtion.href='';
+                        window.localtion.href="{:url('index/index/joinlive')}";
+                    }else{
+                        alert('支付出现错误！'+res.err_code+res.err_desc+res.err_msg);
+//                        alert(res.err_code+res.err_desc+res.err_msg); // 显示错误信息
+                    }
+                }
+                );
+            }
+    function callpay()
+    {
+        if (typeof WeixinJSBridge == "undefined"){
+            if( document.addEventListener ){
+                document.addEventListener('WeixinJSBridgeReady', jsApiCall, false);
+            }else if (document.attachEvent){
+                document.attachEvent('WeixinJSBridgeReady', jsApiCall);
+                document.attachEvent('onWeixinJSBridgeReady', jsApiCall);
+            }
+        }else{
+            jsApiCall();
+        }
+    }
+</script>
+<!-- <script type="text/javascript">
+    //获取共享地址
+    function editAddress()
+    {
+        WeixinJSBridge.invoke(
+                'editAddress',
+                {$editAddress},
+        function(res){
+            var value1 = res.proviceFirstStageName;
+            var value2 = res.addressCitySecondStageName;
+            var value3 = res.addressCountiesThirdStageName;
+            var value4 = res.addressDetailInfo;
+            var tel = res.telNumber;
+
+            alert("editAddress"+value1 + value2 + value3 + value4 + ":" + tel);
+        }
+    );
+    }
+
+    window.onload = function(){
+        if (typeof WeixinJSBridge == "undefined"){
+            if( document.addEventListener ){
+                document.addEventListener('WeixinJSBridgeReady', editAddress, false);
+            }else if (document.attachEvent){
+                document.attachEvent('WeixinJSBridgeReady', editAddress);
+                document.attachEvent('onWeixinJSBridgeReady', editAddress);
+            }
+        }else{
+            editAddress();
+        }
+    };
+</script> -->
+
+</body>
+</html>

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'>
+    <!-- 添加到主屏后的标题（iOS 6 新增） -->
+    <meta name="apple-mobile-web-app-title" content="启蒙">
+    <!-- 是否启用 WebApp 全屏模式，删除苹果默认的工具栏和菜单栏 -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <!-- 设置苹果工具栏颜色 -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <!-- 添加智能 App 广告条 Smart App Banner（iOS 6+ Safari） -->
+    <meta name="apple-itunes-app" content="app-id=myAppStoreID, affiliate-data=myAffiliateData, app-argument=myURL">
+    <!-- 忽略页面中的数字识别为电话，忽略email识别 -->
+    <meta name="format-detection" content="telephone=no">
+    <title> 全部课程 </title>
+    <link rel="stylesheet" href="/res/pltf/live/css/reset.7588.css?v=20171209.193011">
+    <link rel="stylesheet" href="/res/pltf/live/css/main.9707.css?v=20180105.110503">
+
+    <!--<script src="/res/lib/vue-2.2.6/vue.min.js?v=20171209.193011"></script>-->
+    <script src="/res/lib/jquery-3.1.0.min.js?v=20171209.193011"></script>
+
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+<style type="text/css">
+.cover{background: #c31b1b; color: #fff;}
+</style>
+
+
+</head>
+<body>
+
+<div id="app" class="in-main fixed-bottom-bar">
+    <nav class="nav-menubar-zone fixed-top">
+        <ul class="menubar-controller">
+            <li class="item active">
+                <a class="block-navgat" href="javascript:;" title="直播">{$p_title}</a>
+            </li>
+            <li class="item" >
+                <a class="block-navgat" href="javascript:;" onclick="$('.search-dialog').fadeIn(300)" title="科目" >科目</a>
+            </li>
+
+            <li class="item" >
+                <a class="block-navgat" href="javascript:;" onclick="$('.subscribing-dialog').fadeIn(300)" title="年级" >年级</a>
+            </li>
+        </ul>
+    </nav>
+
+    <!--科目-->
+    <div class="dialog search-dialog" style="display: none;">
+        <div class="dialog-bg"></div>
+        <div class="fixed-main" >
+            <div id="" class="details-wrapper" style="padding: 20px">
+
+                <div class="block-mod">
+                    <div class="hot-search">
+                        <h6 class="his-title">科目</h6>
+                        <ul class="hotword-list">
+                            <a href="{url:('index/all')}{$getStr}&classify=">
+                                <li class="item" {if input('get.classify') == null}style="color:#fff;border-color: #3bb4f2;background-color: #3bb4f2;"{/if}>
+                                    所有
+                                </li>
+                            </a>
+
+                            {foreach name="classify" item="val" key="key"}
+                                <a href="{url:('index/all')}{$getStr}&classify={$val.id}">
+                                    <li class="item" {if input('get.classify') == $val.id}style="color:#fff;border-color: #3bb4f2;background-color: #3bb4f2;"{/if}>
+                                        {$val.name}
+                                    </li>
+                                </a>
+                            {/foreach}
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+            <div class="close-zone"><span class="close" onclick="$('.search-dialog').hide()"></span></div>
+        </div>
+    </div>
+
+
+    <!--年级-->
+    <div class="dialog subscribing-dialog" style="display: none;">
+        <div class="dialog-bg"></div>
+        <div class="fixed-main">
+            <div id="dd" class="details-wrapper">
+                <div class="block-mod">
+
+                    <div class="hot-search">
+                        <h6 class="his-title">年级</h6>
+                        <ul class="hotword-list">
+
+                            <a href="{url:('index/all')}{$getStr}&grade=">
+                                <li class="item" {if input('get.grade') == null}style="color:#fff;border-color: #3bb4f2;background-color: #3bb4f2;"{/if}>
+                                    所有
+                                </li>
+                            </a>
+
+                            {foreach name="grade" item="val" $key="key"}
+                                <a href="{url:('index/all')}{$getStr}&grade={$val.id}">
+                                    <li class="item" {if input('get.grade') == $val.id}style="color:#fff;border-color: #3bb4f2;background-color: #3bb4f2;"{/if}>
+                                        {$val.name}
+                                    </li>
+                                </a>
+                            {/foreach}
+
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+            <div class="close-zone"><span class="close" onclick="$('.subscribing-dialog').hide()"></span></div>
+        </div>
+    </div>
+
+
+    <transition name="slide-fade">
+        <div class="block-mod">
+            <section class="lv-lesson-mod category-mod">
+                <ul class="lessons-main">
+                    {foreach name="lives" item="val" key="key"}
+                        <li class="item border-1px">
+                            <a href="{:url('index/live_detail')}?id={$val.id}" target="_blank" class="nav-block">
+                                <div class="cover-img">
+                                    <img alt="{$val.title}" class="img" src="{$val.cover_pic}">
+                                </div>
+                                <div class="main">
+                                    <h4 class="ls-name">{$val.title}</h4>
+                                    <div class="times-zone"><span class="t-deteil">{$val.state}</span></div>
+                                    <div class="learned"><i class="icon-listen"></i> <span>{$val.enlist}</span>人次</div>
+                                    <span class="price">
+                                        {if $val.price == 0}
+                                            免费
+                                        {else}
+                                            ￥ {$val.price}
+                                        {/if}
+                                    </span>
+                                </div>
+                            </a>
+                        </li>
+                    {/foreach}
+                </ul>
+            </section>
+        </div>
+    </transition>
+
+    {if condition="$lives eq null"}
+        <div id="withdraw-empty-content" class="lvcc-noline">
+            <img class="lvcc-nlimg" src="/res/images/live-noline.png?v=20170722.014648" alt="无记录">
+            <p class="lvcc-nltext">暂无数据</p>
+        </div>
+    {/if}
+
+    <div class="more-loading" style="display: none;"><p class="text">滑动加载更多...</p></div>
+    <div class="not-more" style="display: none;"><p class="text">没有更多了</p></div>
+
+    <nav id="menu-bottom-bar" class="menu-bottom-bar">
+        <a href="#" id="totop-btn" type="button" class="totop-btn"
+           style="display: none;">
+            <img src="/res/images/lv-totop.png?v=20171209.193011" alt="回到顶部" class="icon">
+        </a>
+        <ul class="menu-bar border-1px">
+            <li class="item "><a href="{:url('index/index')}" title="首页" class="nav-block"><i
+                    class="icon icon-home"></i> <span
+                    class="text">首页</span></a></li>
+            <li class="item"><a href="{:url('index/hot')}" title="热门" class="nav-block"><i
+                    class="icon icon-recommend"></i> <span
+                    class="text">热门</span></a></li>
+            <li class="item "><a href="{:url('index/mine')}" title="我的" class="nav-block"><i class="icon icon-me"></i>
+                <span class="text">我的</span></a></li>
+        </ul>
+    </nav>
+</div>
+
+<script type="text/javascript">
+    (function () {
+        var loctPathname = window.location.pathname;
+        if (('/', '/live/index', '/live/index/').indexOf(loctPathname) >= 0) {
+            loctPathname = '/live/home';
+        }
+        var winHeight = $(window).height();
+        var minSHeight = winHeight - 200;
+        var menuBottomBar = document.getElementById('menu-bottom-bar');
+        var menuList = menuBottomBar.getElementsByClassName('nav-block');
+        for (var i = menuList.length - 1; i >= 0; i--) {
+            var item = menuList[i];
+            var itemHref = item.getAttribute('href');
+            if (itemHref.indexOf(loctPathname) >= 0) {
+                item.setAttribute('href', 'javascript:;');
+                $(item).parent('li').addClass('active');
+            }
+        }
+        minSHeight ? minSHeight = minSHeight : minSHeight = 600;
+        $(window).on('scroll', function (e) {
+            var s = $(window).scrollTop();
+            if (s > minSHeight) {
+                $("#totop-btn").fadeIn(100);
+            } else {
+                $("#totop-btn").fadeOut(200);
+            }
+            ;
+        });
+        $('body').on('click', '#totop-btn', function (e) {
+            e.preventDefault();
+            $('html, body').animate({
+                scrollTop: 0
+            }, 500)
+        })
+    })()
+</script>
+
+
+
+
+
+
+</body>
+</html>

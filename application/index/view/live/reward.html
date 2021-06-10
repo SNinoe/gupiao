@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'>
+	<!-- 添加到主屏后的标题（iOS 6 新增） -->
+	<meta name="apple-mobile-web-app-title" content="启蒙">
+	<!-- 是否启用 WebApp 全屏模式，删除苹果默认的工具栏和菜单栏 -->
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<!-- 设置苹果工具栏颜色 -->
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<!-- 添加智能 App 广告条 Smart App Banner（iOS 6+ Safari） -->
+	<meta name="apple-itunes-app" content="app-id=myAppStoreID, affiliate-data=myAffiliateData, app-argument=myURL">
+	<!-- 忽略页面中的数字识别为电话，忽略email识别 -->
+	<meta name="format-detection" content="telephone=no">
+    <title>打赏记录</title>
+
+	<link rel="stylesheet" href="/res/pltf/live/css/reset.7588.css?v=20171209.193011">
+	<link rel="stylesheet" href="/res/pltf/live/css/main.9707.css?v=20180105.110503">
+	<script src="/res/lib/jquery-3.1.0.min.js?v=20171209.193011"></script>
+
+	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+	<!--[if lt IE 9]>
+	<script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+	<script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+	<![endif]-->
+    
+</head>
+<body>
+
+<div id="app" class="in-main">
+	<section class="pagehome-wrapper">
+		<section class="live-gifts-center">
+			<ul class="order-details-list">
+				{foreach name="reward" item="val" key="key"}
+				<li class="item">
+					<div class="i-surface">
+						<div class="time-zone">
+							<p class="day">{$val.create_time|date="m-d",###}</p>
+							<span class="hour" >{$val.create_time|date="H:m",###}</span>
+						</div>
+						<div class="info-main clearfix">
+							<div class="avatar-zone">
+								<img src="{$val.photo}" alt="" class="avrtar">
+							</div>
+							<h4 class="name">{$val.nickname}</h4>
+							<p class="desc">打赏</p>
+						</div>
+						<div class="statistics">
+							<div class="status">¥ <span class="num">{$val.reward_money}</span>元</div>
+						</div>
+					</div>
+				</li>
+				{/foreach}
+
+			</ul>
+	        <div v-show="rewardHasMorn" class="more-loading" v-cloak>
+	            <p class="text">正在加载更多...</p>
+	        </div>
+	        <div v-show="!rewardHasMorn" class="not-more" v-cloak>
+	            <p class="text">没有更多了</p>
+	        </div>
+		</section>
+
+		{if condition="$reward eq null"}
+			<div id="empty-content" class="lvcc-noline" style="display: block">
+				<img class="lvcc-nlimg" src="/res/images/live-noline.png?v=20171209.193010" alt="无记录">
+				<p class="lvcc-nltext">
+					还没有打赏记录<br>成为第一个打赏Ta的人，支持Ta
+				</p>
+			</div>
+		{/if}
+	</section>
+	<div class="back-center-box">
+		<a href="{:url('index/live_in')}?id={$id}" class="turn-btn" title="回到课堂">回到课堂</a>
+	</div>
+</div>
+
+
+
+
+
+</body>
+</html>

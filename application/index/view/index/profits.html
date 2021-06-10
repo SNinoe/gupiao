@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'>
+    <!-- 添加到主屏后的标题（iOS 6 新增） -->
+    <meta name="apple-mobile-web-app-title" content="启蒙">
+    <!-- 是否启用 WebApp 全屏模式，删除苹果默认的工具栏和菜单栏 -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <!-- 设置苹果工具栏颜色 -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <!-- 添加智能 App 广告条 Smart App Banner（iOS 6+ Safari） -->
+    <meta name="apple-itunes-app" content="app-id=myAppStoreID, affiliate-data=myAffiliateData, app-argument=myURL">
+    <!-- 忽略页面中的数字识别为电话，忽略email识别 -->
+    <meta name="format-detection" content="telephone=no">
+    <title> 直播间收益 </title>
+    <link rel="stylesheet" href="/res/pltf/live/css/reset.7588.css?v=20171014.104410">
+    <link rel="stylesheet" href="/res/pltf/live/css/main.9707.css?v=20180129.184014">
+
+    <script src="/res/lib/jquery-3.1.0.min.js?v=20170722.014748"></script>
+
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+
+</head>
+<body>
+
+
+<input id="account-id-input" type="hidden" value="2052">
+<div class="in-main" id="app">
+    <section class="profits-pro">
+        <p class="pro-text">可提现金额 (元)</p>
+        <div class="pro-number-zone">
+            <h3 id="be-withdraw-amount" class="pro-num">0.00</h3>
+        </div>
+        <a href="javascript:;" class="withdrawal-record" title="提现记录" onclick="$('#withdraw-dlg').fadeIn(300)">提现记录</a>
+    </section>
+    <div class="profits-details">
+        <ol class="details-list">
+            <li class="item">
+                <strong class="num">0.00</strong>
+                <p class="text">待结算金额</p>
+            </li>
+            <li class="item">
+                <strong class="num">0.00</strong>
+                <p class="text">已提现金额</p>
+            </li>
+            <li class="item">
+                <strong class="num">0.00</strong>
+                <p class="text">总收益</p>
+            </li>
+        </ol>
+        <p class="profits-tip-text">1、总收益＝待结算金额＋已提现金额＋可提现金额</p>
+        <p class="profits-tip-text">2、为了保障用户的权益，课程所产生的收益待结算，均会在课程结束后3天内计入可提现金额</p>
+        <p class="profits-tip-text">3、提现之前需要关注启蒙公众号 <a href="javascript:;"
+                                                       onclick="$('.qr-dialog').fadeIn(300)">启蒙二维码</a>
+        </p>
+    </div>
+    <div class="tab-main-zone">
+        <ul class="tab-list">
+            <li class="item" onclick="$('.details-dialog').fadeIn(300)">订单明细</li>
+        </ul>
+    </div>
+
+    <div class="withdraw-zone">
+        <p class="withdraw-text">每天可提现一次，最低10元，最大提现金额为10000元</p>
+        <!--<button class="btn" type="button" title="申请提现" @click.prevent="App.alertResult(true, '即将开放');">申请提现</button>-->
+        <button class="btn" type="button" title="申请提现" onclick="$('.withdraw-dialog').fadeIn(300)">申请提现
+        </button>
+        <button v-else v-cloak class="btn" type="button" title="申请提现">您有<span v-text="processingData.money"></span>元的提现正在处理中
+        </button>
+    </div>
+
+
+    <!--订单明细-->
+    <div id="purchases-dlg" v-show="showOrderModel" class="dialog order-details-dialog details-dialog"
+         style="display: none">
+        <div class="dialog-bg"></div>
+        <div class="fixed-main">
+            <div id="account-purchases-list" class="details-wrapper">
+                <!--<div class="will-pro" v-if="purchaseList.length > 0" >-->
+                <!--待结算金额：-->
+                <!--<span class="num-zone">¥<span class="pro-num">0.00</span></span>-->
+                <!--</div>-->
+                <div class="details-main" v-if="purchaseList.length > 0">
+                    <ul class="details-list">
+                        <li class="item">
+                            <div class="i-surface">
+                                <div class="time-zone">
+                                    <p class="day">12月30</p>
+                                    <span class="hour">14:06</span>
+                                </div>
+                                <div class="info-main clearfix">
+                                    <div class="avatar-zone">
+                                        <img class="avrtar"
+                                             src="https://img.wekuo.com/upload/live_cover/1704/1516601113?imageView2/2/w/160"
+                                             alt="">
+                                    </div>
+                                    <h4 class="name">胡大官人</h4>
+                                    <p class="desc">打赏</p>
+                                </div>
+                                <div class="statistics">
+                                    <div class="number-zone">＋<span class="num" v-text="item.income">666</span>元</div>
+                                    <div class="status wait" :class="{wait: !item.count_time}"
+                                         v-text="!item.count_time ? '待结算': '已结算'">已结算
+                                    </div>
+                                </div>
+                                <!--<img class="ico-arr" src="/res/images/circle-icon-toggle.png?v=20170722.014513"-->
+                                <!--alt="">-->
+                            </div>
+                            <!--<div class="i-inner">-->
+                            <!--<ol class="inner-list">-->
+                            <!--<li  class="item">-->
+                            <!--<div class="i-main">-->
+                            <!--官方合作分成-->
+                            <!--</div>-->
+                            <!--<div class="i-right" v-text="'-'+item.official_money+'元'">-->
+                            <!--+66元-->
+                            <!--</div>-->
+                            <!--</li>-->
+                            <!--<li v-show="item.sale_money > 0" class="item">-->
+                            <!--<div class="i-main">-->
+                            <!--分销分成-->
+                            <!--</div>-->
+                            <!--<div class="i-right" v-text="'-'+item.sale_money+'元'">-->
+                            <!--+88元-->
+                            <!--</div>-->
+                            <!--</li>-->
+                            <!--<li class="item count">-->
+                            <!--<div class="text">总计<span v-text="item.purchase.money"></span>元，结余<span-->
+                            <!--v-text="item.income">3</span>元-->
+                            <!--</div>-->
+                            <!--</li>-->
+                            <!--</ol>-->
+                            <!--</div>-->
+                        </li>
+                    </ul>
+                    <div v-show="purchaseHasMore" class="m-loading" v-cloak><span class="text">滑动加载更多...</span>
+                    </div>
+                    <div v-show="!purchaseHasMore" class="not-more" v-cloak><span class="text">没有更多了</span></div>
+                </div>
+                <div id="purchase-empty-content" class="lvcc-noline" style="display: none">
+                    <img class="lvcc-nlimg" src="/res/images/live-noline.png?v=20170722.014648" alt="无记录">
+                    <p class="lvcc-nltext">还没有产生直播间收益</p>
+                </div>
+            </div>
+            <div class="close-zone">
+                <span class="close" onclick="$('.dialog').hide();"></span>
+            </div>
+        </div>
+    </div>
+
+    <!--提现记录-->
+    <div id="withdraw-dlg" class="dialog order-details-dialog" style="display: none">
+        <div class="dialog-bg"></div>
+        <div class="fixed-main">
+            <div id="withdraw-list-scroll" class="details-wrapper">
+                <section class="lv-money-details">
+                    <ul id="withdraw-list" class="lvmd-income-list">
+                        <li>
+                            <div class="incomer-info">
+                                <!--<img class="incomer-pic1" src="/res/images/live-youjiang.jpg?v=20170722.014523"-->
+                                     <!--alt="启蒙">-->
+                                <h4 class="nickname">提现：<span v-text="item.money">66</span> 元</h4>
+                                <p class="income-time">2018-1-30</p>
+                            </div>
+                            <div class="withdraw-status pass"
+                                 :class="{'pass': isWithdrawPass(item.state), 'not-pass': isWithdrawFail(item.state)}">
+                                通过
+                            </div>
+                        </li>
+                    </ul>
+                    <div v-show="withdrawHasMore" class="m-loading" v-cloak><span class="text">滑动加载更多...</span>
+                    </div>
+                    <div v-show="!withdrawHasMore" class="not-more" v-cloak><span class="text">没有更多了</span></div>
+                </section>
+                <div id="withdraw-empty-content" class="lvcc-noline" style="display: none">
+                    <img class="lvcc-nlimg" src="/res/images/live-noline.png?v=20170722.014648" alt="无记录">
+                    <p class="lvcc-nltext">还没有提现记录</p>
+                </div>
+            </div>
+            <div class="close-zone">
+                <span class="close" onclick="$('.dialog').hide()"></span>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="withdraw-dialog" style="z-index: 110;display: none">
+        <div class="withdraw-wrapper">
+            <div class="dialog-main">
+                <div class="dialog-header">
+                    <h2 class="title">申请提现</h2>
+                </div>
+                <div class="dialog-body">
+                    <h4 class="withdraw-tit">提现金额</h4>
+                    <div class="form-control-zone">
+                        <span class="ico">¥</span>
+                        <input ref="formNum" class="form-control-num" type="number" v-model="currentWithdraw"
+                               :max="maxWithdraw">
+                    </div>
+                    <div class="withdraw-text-zone">
+                        提现金额¥<span class="max-number" v-text="maxWithdraw">0</span>，<a href="javascript:;"
+                                                                                       @click.prevent="currentWithdraw = maxWithdraw">全部提现</a>
+                    </div>
+                    <div class="text-center">
+                        <button class="withdraw-btn" type="submit" @click="submitWithdraw">提现</button>
+                    </div>
+                    <p class="tip-text">1-3个工作日到账</p>
+                </div>
+                <div class="dialog-footer">
+                    <span class="close" onclick="$('.withdraw-dialog').hide()" style="
+                                position: absolute;
+                                top: 88%;
+                                left: 50%;
+                                z-index: 1;
+                                margin: -22px 0 0 -22px;
+                                display: inline-block;
+                                width: 44px;
+                                height: 44px;
+                                background: url(/res/images/lv-ico-close1.png) center center no-repeat;
+                                background-size: 35px 35px;">
+                    </span>
+                </div>
+
+
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- 验证身份证 -->
+    <div class="dialog verification-dialog" style="display: none">
+        <div class="dialog-bg"></div>
+        <div class="dialog-main">
+            <div class="dialog-content">
+                <h4 class="title">验证身份</h4>
+                <div class="textarea-zone">
+                    <label class="textarea-label">真实姓名：</label>
+                    <input type="text" class="textarea-control" placeholder="真实姓名">
+                </div>
+                <div class="textarea-zone">
+                    <label class="textarea-label">身份证号码：</label>
+                    <input type="text" class="textarea-control" placeholder="身份证号码">
+                </div>
+                <div class="textarea-zone">
+                    <label class="textarea-label">手机号码：</label>
+                    <input type="text" class="textarea-control" placeholder="手机号码">
+                </div>
+                <div class="textarea-zone">
+                    <label class="textarea-label">手机号码：</label>
+                    <input type="text" class="textarea-control" placeholder="*******4072" disabled="disabled">
+                </div>
+                <div class="textarea-zone">
+                    <label class="textarea-label">验证码：</label>
+                    <input type="text" class="textarea-control" placeholder="验证码">
+                    <button type="button" class="send-btn">发送验证码</button>
+                </div>
+            </div>
+            <div class="dialog-footer">
+                <a class="dialog-cancel-btn dialog-btn cancle" onclick="$('.dialog').hide();"
+                   href="javascript:;">取消</a>
+                <a class="dialog-confirm-btn dialog-btn confirm" href="javascript:;">确定</a>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div v-show="showWekuoQrcode" class="dialog sale-tip-dialog qr-dialog" style="z-index: 1021;display: none">
+    <div class="dialog-bg" @click="showWekuoQrcode=false"></div>
+    <div class="dialog-main">
+        <div class="dialog-title">关注启蒙公众号</div>
+        <div class="dialog-content">
+            <div class="share-qrcode-zone" id="url-qr-code">
+                <img src="/res/images/qr-code.jpg?v=20170722.014523" alt="" class="share-qrcode">
+            </div>
+            <p class="p2">关注启蒙以后，返回这里完成提现</p>
+        </div>
+        <button type="button" class="dialog-footer closeDia" onclick="$('.dialog').hide()">我知道了</button>
+    </div>
+</div>
+
+
+</body>
+</html>

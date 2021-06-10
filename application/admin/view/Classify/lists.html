@@ -1,0 +1,144 @@
+﻿{include file="Public:meta"}
+
+<title>分类列表</title>
+</head>
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 直播管理 <span class="c-gray en">&gt;</span> 分类列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container">
+	<div class="cl pd-5 bg-1 bk-gray mt-20"> 
+		<span class="l">
+			<a href="javascript:;" onclick="classify_add('添加分类','/admin/classify/add.html','540','560')" class="btn btn-primary radius">
+				<i class="Hui-iconfont">&#xe600;</i> 添加分类
+			</a>
+		</span> 
+	</div>
+	<table class="table table-border table-bordered table-bg">
+		<thead>
+			<tr>
+				<th scope="col" colspan="9">分类列表</th>
+			</tr>
+			<tr class="text-c">
+				<th width="40">ID</th>
+				<th width="150">名称</th>
+				<th width="90">图标</th>
+				<th width="130">添加时间</th>
+				<th width="100">是否已启用</th>
+				<th width="100">操作</th>
+			</tr>
+		</thead>
+		<tbody>
+        	{foreach name="data" item="v" key="k"}
+				<tr class="text-c">
+					<td>{$v.id}</td>
+					<td>{$v.name}</td>
+					<td><img src="{$v.icon}" style="width:30px;"></td>
+					<td>{$v.create_time}</td>
+					<td class="td-status">
+						{if $v.is_show == 0}
+							<span class="label radius">已停用</span>
+						{else}
+							<span class="label label-success radius">已启用</span>
+						{/if}
+					</td>
+					<td class="td-manage">
+						{if $v.is_show == 0}
+							<a style="text-decoration:none" onclick="onOff('{$v.id}',1)" href="javascript:;" title="启用">
+								<i class="Hui-iconfont" style="font-size:20px;">&#xe615;</i>
+							</a>
+						{else}
+							<a style="text-decoration:none" onclick="onOff('{$v.id}',0)" href="javascript:;" title="停用">
+								<i class="Hui-iconfont" style="font-size:20px;">&#xe631;</i>
+							</a> 
+						{/if}
+						<a title="编辑" href="javascript:;" onclick="classify_edit('编辑','edit.html?id={$v.id}','540','560')" class="ml-5" style="text-decoration:none">
+							<i class="Hui-iconfont" style="font-size:20px;">&#xe6df;</i>
+						</a> 
+						<a title="删除" href="javascript:;" onclick="del('{$v.id}')" class="ml-5" style="text-decoration:none">
+							<i class="Hui-iconfont" style="font-size:20px;">&#xe6e2;</i>
+						</a>
+					</td>
+				</tr>
+			{/foreach}
+		</tbody>
+	</table>
+</div>
+<!--_footer 作为公共模版分离出去-->
+{include file="Public:footer"}
+<!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="__STATIC__/../Admin/lib/My97DatePicker/4.8/WdatePicker.js"></script> 
+<script type="text/javascript" src="__STATIC__/../Admin/lib/datatables/1.10.0/jquery.dataTables.min.js"></script> 
+<script type="text/javascript" src="__STATIC__/../Admin/lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript">
+/*
+	参数解释：
+	title	标题
+	url		请求的url
+	id		需要操作的数据id
+	w		弹出层宽度（缺省调默认值）
+	h		弹出层高度（缺省调默认值）
+*/
+/*分类-增加*/
+function classify_add(title,url,w,h){
+	layer_show(title,url,w,h);
+}
+
+// 开启、关闭
+function onOff(id , is_show=0)
+{
+    if(id > 0){
+          
+        $.post("{:url('classify/onOff')}",{id:id,is_show:is_show},function (res) {
+
+            if(res.code == 1){
+            	layer.msg(res.msg,{icon:1,time:1000});
+            } else {
+            	layer.msg(res.msg,{icon:2,time:1000});
+            }
+            
+            setTimeout(function () {
+                location.replace(location.href);
+            }, 2000);
+
+        });
+
+    }else {
+    	layer.msg('参数有误',{icon:7,time:1000});
+    }
+
+}
+
+// 删除
+function del(id)
+{
+    if(id > 0){
+          
+        $.post("{:url('classify/del')}",{id:id},function (res) {
+
+            if(res.code == 1){
+            	layer.msg(res.msg,{icon:1,time:1000});
+            } else {
+            	layer.msg(res.msg,{icon:2,time:1000});
+            }
+            
+            setTimeout(function () {
+                location.replace(location.href);
+            }, 2000);
+
+        });
+
+    }else {
+    	layer.msg('参数有误',{icon:7,time:1000});
+    }
+
+}
+
+/*分类-编辑*/
+function classify_edit(title,url,w,h){
+	layer_show(title,url,w,h);
+}
+
+</script>
+</body>
+</html>

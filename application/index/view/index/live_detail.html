@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <!-- 添加到主屏后的标题（iOS 6 新增） -->
+    <meta name="apple-mobile-web-app-title" content="启蒙">
+    <!-- 是否启用 WebApp 全屏模式，删除苹果默认的工具栏和菜单栏 -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <!-- 设置苹果工具栏颜色 -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <!-- 添加智能 App 广告条 Smart App Banner（iOS 6+ Safari） -->
+    <meta name="apple-itunes-app" content="app-id=myAppStoreID, affiliate-data=myAffiliateData, app-argument=myURL">
+    <!-- 忽略页面中的数字识别为电话，忽略email识别 -->
+    <meta name="format-detection" content="telephone=no">
+    <title> 直播详情 </title>
+    <link rel="stylesheet" href="/res/pltf/live/css/reset.7588.css?v=20171209.193011">
+    <link rel="stylesheet" href="/res/pltf/live/css/main.9707.css?v=20180105.110503">
+
+
+    <script src="/res/lib/jquery-3.1.0.min.js?v=20171209.193011"></script>
+    <!--<script src="/res/app.10049.js?v=20180123.230545"></script>-->
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+
+</head>
+<body>
+
+<script src="/res/lib/jquery.qrcode.min.js?v=20171209.193012"></script>
+<link rel="stylesheet" type="text/css"
+      href="/res/pltf/lesson/lesson-desc.default.6269.css?v=20171209.193011">
+
+<input id="live-id-value" type="hidden" value="1748">
+<input id="sale-link-id-value" type="hidden" value="None">
+
+<input id="live-logo-url" type="hidden" value="/res/pltf/live/logo_icon.png?v=20171209.193011">
+<input id="wekuo-logo-url" type="hidden" value="/res/pltf/wekuo_icon.png?v=20171209.193011">
+<input id="free-scan-bg" type="hidden"
+       value="/res/images/invite_bgs/detail_scan_bg.png?v=20171209.193010">
+
+<input type="hidden" id="__default_kf_img" value="/res/images/qr-live.jpg?v=20171209.193010">
+
+<div id="app"><!---->
+    <div class="in-main fixed-bottom-bar">
+        <div class="live-info-wrapper">
+            <div class="info-container clearfix">
+                <div class="cover-zone">
+                    <img ori-src="http://img.wekuo.com/upload/live_cover/1748/1516884177" alt="" class="cover-img" src="{$info.cover_pic}">
+                </div>
+                <div class="info-main"><h4 class="lv-name">{$info.title}</h4>
+                    <div class="extra-info">{$info.begin_time|date="m-d H:m",###}</div>
+                    <p class="learned">{$info.enlist} 人次</p></div>
+                <ul class="desc-zone">
+                    <li class="item">语音直播</li>
+                    <li class="item">嘉宾答疑</li>
+                    <li class="item">永久回听</li>
+                </ul>
+            </div>
+
+            <!--分销-->
+            <!-- <div class="slider-share-zone">
+                <a href="/live/sale?obj_id=bGl2ZV9zYWxlLTE3NDg=&amp;obj_type=bGl2ZV9zYWxlLTEw" class="slider-share">
+                    <div class="icon-wrap">
+                        <img src="/res/images/lv-icon-coin.png?v=20171209.193010" class="icon">
+                    </div>
+                    <div class="label-wrap">
+                        <label>赚<span class="text-danger">1.98</span>元</label>
+                    </div>
+                </a>
+            </div> -->
+
+        </div>
+        <div class="ld-account-zone">
+            <div class="account-zone">
+                <a href="{:url('index/zhubo')}?id={$anchor.id}" class="info-zone clearfix">
+                    <div class="cover-zone">
+                        <img alt="" class="cover-img" src="{$anchor.photo}">
+                    </div>
+                    <h5 class="name">
+                        {if $anchor.live_name}
+                            {$anchor.live_name}
+                        {else}
+                            {$anchor.nickname}的直播间
+                        {/if}
+                    </h5>
+                    <div class="follow-num"><span class="num">{$anchor.be_guanzhu}</span> 人关注</div>
+                </a>
+                {if $is_follow == 0}
+                    <button type="button" class="follow-btn" onClick="doFollow({$info.id})">关注</button>
+                {else}
+                    <p style="color:#ccc;">已关注</p>
+                {/if}
+            </div>
+        </div>
+        <div>
+        </div>
+        <div class="lv-detail-model">
+            <div class="detail-header"><h5 class="lv-detail-title">课程简介</h5>
+                <!--<button type="button" class="right-btn" style="display: block;"><img-->
+                <!--src="/res/images/ls-audio-select.png?v=20171209.193011" alt=""-->
+                <!--class="icon">-->
+                <!--</button>-->
+            </div>
+            <div class="lv-model-main">
+                <div class="live-article2">
+                    <div id="live-article">
+                        {$info.desc}
+                    </div>
+                </div>
+                <!--<button type="button" class="toggle-btn"><img-->
+                <!--src="/res/images/ls-audio-select.png?v=20171209.193011" alt=""-->
+                <!--class="icon">-->
+                <!--</button>-->
+            </div>
+        </div>
+        <div class="lv-detail-model">
+            <div class="detail-header"><h5 class="lv-detail-title">用户须知</h5></div>
+            <div class="lv-model-main">
+                <div class="agreement-content">
+                    内容版权归嘉宾所有，未经嘉宾许可，任何人不得以任何形式复制、转载和使用课程内容。
+                    <br><br>
+                    本商品为虚拟内容服务，一经购买成功概不退款，请您理解。
+                </div>
+                <div class="qr-zone">
+                    <img src="/res/images/qr-live.jpg?v=20171209.193010" alt="启蒙直播" class="qr-pic">
+                    <span class="qr-text">长按识别二维码 关注［启蒙］</span>
+                </div>
+            </div>
+        </div>
+        <!--<div class="dialog more-control-dialog" style="display: none;">-->
+        <!--<div class="dialog-bg"></div>-->
+        <!--<div class="dialog-bottomMain"><h4 class="dialog-title"><span>更多</span></h4> &lt;!&ndash;&ndash;&gt;-->
+        <!--<ul class="control-tool-list">-->
+        <!--<li class="item"><img src="/res/images/lv-o-service.png?v=20171209.193011"-->
+        <!--alt="" class="icon"> <span class="text">联系客服</span></li>-->
+        <!--<li class="item"><img src="/res/images/lv-o-follow.png?v=20171209.193010"-->
+        <!--alt="" class="icon"> <span class="text">关注直播间</span></li>-->
+        <!--<a href="/live/account/home">-->
+        <!--<li class="item"><img src="/res/images/lv-o-create.png?v=20171209.193010"-->
+        <!--alt="" class="icon"> <span class="text">我要开直播</span></li>-->
+        <!--</a></ul>-->
+        <!--<button type="button" class="close-dialog">取消</button>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--<div class="urlshow-dialog" style="display: block;">-->
+        <!--<div class="center-wrapper">-->
+        <!--<div class="center-main">-->
+        <!--<div class="dialog-content"><h4 class="title">查看直播链接</h4>-->
+        <!--<div class="textarea-zone">-->
+        <!--<div class="textarea-label">课程主页：</div>-->
+        <!--<button type="button" class="right-btn">链接二维码</button>-->
+        <!--<p class="textarea-control">https://live.wekuo.com/lv/dt/1748</p></div>-->
+        <!--<div class="textarea-zone"><a href="javascript:;" class="dialog-confirm-btn dialog-btn confirm">获取免费链接</a>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--<div class="dialog-footer"><a href="javascript:;"-->
+        <!--class="dialog-confirm-btn dialog-btn confirm">我知道了</a></div>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--<div class="qrpay-dialog" style="display: none;">-->
+        <!--<div class="withdraw-wrapper">-->
+        <!--<div class="dialog-main">-->
+        <!--<div class="dialog-close"></div>-->
+        <!--<div class="dialog-body">-->
+        <!--<div class="weixin"><p class="qrpay-tit">客服咨询信息</p> <img alt="启蒙微信"-->
+        <!--class="qr-card img-responsive"-->
+        <!--src="/res/images/qr-live.jpg?v=20171209.193010">-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--</div>-->
+
+
+        <!--购买弹层-->
+        <div id="pay_dialog" class="qrpay-dialog" style="display: none;">
+            <div class="withdraw-wrapper">
+                <div class="dialog-main">
+                    <div class="dialog-header">
+                        <div class="title">长按识别二维码进行付款</div>
+                    </div>
+                    <div class="dialog-body">
+                        <div class="weixin">
+                            <p class="qrpay-tit">支付金额： <span class="num purchase_qrcode_money">99</span>元 </p> 
+                            <img src="/res/images/qr-live.jpg?v=20171209.193010" alt="微信支付" style="padding: 20px" class="qr-card purchase_qrcode_img">
+                        </div>
+                    </div>
+                    <div class="dialog-footer">
+                        <span class="close" onclick="$('#pay_dialog').hide()" style="
+                            position: absolute;
+                            top: 108%;
+                            left: 50%;
+                            z-index: 1;
+                            margin: -22px 0 0 -22px;
+                            display: inline-block;
+                            width: 44px;
+                            height: 44px;
+                            background: url(/res/images/lv-ico-close1.png) center center no-repeat;
+                            background-size: 35px 35px;">
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!--赠送弹层-->
+        <div class="dialog packGiftDia" style="display: none;">
+            <div class="dialog-bg" onclick="$('.packGiftDia').hide()"></div>
+            <div id="pack-gifts" class="dialog-bottomMain">
+                <ul class="content-list">
+                    <li class="i-info">
+                        <h5 class="title">打包豪礼赠送给好友们来听课！</h5>
+                        <p class="time">直播于<span>{$info.begin_time|date="Y-m-d H:m:s",###}</span>开始</p>
+                    </li>
+                    <li class="i-main-box"><h5 class="im-title">赠送数量</h5>
+                        <ol id="rwdl-gifts-nums" class="rwdlgifts-btns clearfix">
+                            <li class=""><a href="javascript:;" data-value="1">1份</a></li>
+                            <li class="on"><a href="javascript:;" data-value="2">2份</a></li>
+                            <li class=""><a href="javascript:;" data-value="5">5份</a></li>
+                            <li class=""><a href="javascript:;" data-value="10">10份</a></li>
+                            <li class=""><a href="javascript:;" data-value="20">20份</a></li>
+                            <li class=""><a href="javascript:;" data-value="50">50份</a></li>
+                        </ol>
+                        <div class="i-flex">
+                            <input type="hidden" name="price" id="price" value="{$info.price}">
+                            <div class="i-left">共计：<span id="total-money" class="money">¥ 0.00</span></div>
+                            <!--<div class="i-right">-->
+                            <!--<ol class="num-btns clearfix">-->
+                            <!--<li id="sub-count-btn" class="btn" style="padding-top: 5px">-->
+                            <!--其它-->
+                            <!--&lt;!&ndash;<a href="javascript:;">&ndash;&gt;-->
+                            <!--&lt;!&ndash;<img&ndash;&gt;-->
+                            <!--&lt;!&ndash;src="/res/images/live-num2.png?v=20171209.193010"&ndash;&gt;-->
+                            <!--&lt;!&ndash;alt="减">&ndash;&gt;-->
+                            <!--&lt;!&ndash;</a>&ndash;&gt;-->
+                            <!--</li>-->
+                            <!--<li class="income">-->
+                            <!--<input type="number" min="1" max="99999" step="1"-->
+                            <!--class="income-number">-->
+                            <!--</li>-->
+                            <!--&lt;!&ndash;<li id="add-count-btn" class="btn"><a href="javascript:;"><img&ndash;&gt;-->
+                            <!--&lt;!&ndash;src="/res/images/live-num1.png?v=20171209.193010"&ndash;&gt;-->
+                            <!--&lt;!&ndash;alt="加"></a></li>&ndash;&gt;-->
+                            <!--</ol>-->
+                            <!--</div>-->
+                        </div>
+                        <p class="im-tip">领取后，好友即可免费参加该课程，课程永久有效。</p></li>
+                    <li>
+                        <button type="button" class="footer-btn pack" onclick="$('.dialog').hide();$('.pack_success').fadeIn(300)">打包赠礼 </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    
+        <script src="/res/layui/layer_mobile/layer.js"></script>
+        <script>
+            function total() {
+                var price = $('#price').val();
+                var totalmoney = $('#total-money');
+                var num = $('li.on a').attr('data-value');
+                console.log(price);
+                console.log(num);
+                var total = price * num;
+                //保留2位小数
+                total = Math.round(total * 100) / 100
+                totalmoney.text("¥ " + total);
+
+            }
+
+
+            $(function () {
+                total();
+            });
+            $('#rwdl-gifts-nums li').click(function () {
+                $('#rwdl-gifts-nums li').removeClass('on');
+                $(this).addClass('on');
+                total();
+            });
+
+            // 关注直播间
+            function doFollow(id)
+            {
+                $.post("{:url('index/doFollow')}",{id:id},function (res) {
+
+                    layer.open({
+                        content: res.msg
+                        ,skin: 'msg'
+                        ,time: 2 //2秒后自动关闭
+                    });
+                    
+                    setTimeout(function () {
+                        location.replace(location.href);
+                    }, 2000);
+
+                });
+            }
+
+            // 免费领取
+            function free(live_id)
+            {
+                $.post("{:url('orders/freeGet')}",{live_id:live_id},function (res) {
+
+                    layer.open({
+                        content: res.msg
+                        ,skin: 'msg'
+                        ,time: 2 //2秒后自动关闭
+                    });
+                    
+                    setTimeout(function () {
+                        location.replace(location.href);
+                    }, 2000);
+
+                });
+            }
+
+            // 购买
+            function buy(live_id)
+            {
+                // layer.open({
+                //     content: '确定要购买吗'
+                //     , btn: ['是的', '取消']
+                //     , yes: function (index) {
+                //         location.replace("{:url('orders/buy')}?live_id={$info.id}");
+                //     }
+                // });
+                var url = "{:url('orders/buy')}?live_id={$info.id}";
+                $.get(url,'',function (res) {
+                    // console.log(res);
+                    var jsApiParameters = res;
+                    callpay(jsApiParameters);
+                });
+
+            }
+
+
+            function jsApiCall(jsApiParameters)
+            {
+                WeixinJSBridge.invoke(
+                    'getBrandWCPayRequest',
+                    jsApiParameters,
+                    function(res){
+                        if(res.err_msg == "get_brand_wcpay_request:ok" ) {
+                            // 使用以上方式判断前端返回,微信团队郑重提示：
+                            // res.err_msg将在用户支付成功后返回
+                            // ok，但并不保证它绝对可靠。
+                            //跳转页面window.localtion.href='';
+                            window.localtion.href="{:url('index/index/joinlive')}";
+                        }else{
+                            // alert('支付出现错误！'+res.err_code+res.err_desc+res.err_msg);
+                            // alert(res.err_code+res.err_desc+res.err_msg); // 显示错误信息
+                        }
+                    }
+                );
+            }
+            function callpay(jsApiParameters)
+            {
+                if (typeof WeixinJSBridge == "undefined"){
+                    if( document.addEventListener ){
+                        document.addEventListener('WeixinJSBridgeReady', jsApiCall, false);
+                    }else if (document.attachEvent){
+                        document.attachEvent('WeixinJSBridgeReady', jsApiCall);
+                        document.attachEvent('onWeixinJSBridgeReady', jsApiCall);
+                    }
+                }else{
+                    jsApiCall(jsApiParameters);
+                }
+            }
+
+
+        </script>
+
+        <!--赠送成功-->
+        <div class="dialog checkPackGiftDia pack_success" style="display: none;">
+            <div class="dialog-bg"></div>
+            <div class="dialog-bottomMain">
+                <ul class="content-list">
+                    <li class="i-ready"><h5 class="title">您的赠礼已经包装好～</h5>
+                        <p class="text">查看领取情况，请在“<span class="text-primary">赠送给好友</span>”中查看</p></li>
+                    <li><a href="{:url('index/center')}" type="button" class="footer-btn check-pack">查看赠礼</a></li>
+                </ul>
+            </div>
+        </div>
+
+
+        <!--<div class="dialog share-fir-dialog" style="display: none;">-->
+        <!--<div class="dialog-bg"></div>-->
+        <!--<div class="dialog-main">-->
+        <!--<div class="dialog-content">-->
+        <!--免费课程，请点击页面右上角，选择 <img src="/res/images/live-share1.png?v=20171209.193010"-->
+        <!--alt="转发"> 或 <img-->
+        <!--src="/res/images/live-share2.png?v=20171209.193010" alt="朋友圈"> 分享给好友-->
+        <!--</div>-->
+        <!--<div class="dialog-footer closeDia">我知道了</div>-->
+        <!--</div>-->
+        <!--</div>-->
+
+
+        <!--<div class="dialog sale-tip-dialog" style="display: block;">-->
+        <!--<div class="dialog-bg"></div>-->
+        <!--<div class="dialog-main">-->
+        <!--<div class="dialog-title">长按二维码保存</div>-->
+        <!--<div class="dialog-content">-->
+        <!--<div class="share-qrcode-zone"><img src="" style="padding: 20px;"></div>-->
+        <!--<div id="url-qr-code" style="display: none;"></div>-->
+        <!--<p class="p2">可添加至各宣传渠道进行推广</p></div>-->
+        <!--<button type="button" class="dialog-footer closeDia" onclick="$('.dialog').hide();">我知道了</button>-->
+        <!--</div>-->
+        <!--</div>-->
+
+
+        <div class="detail-bottom-bar">
+            <a href="{:url('index/index')}" class="totop-btn">
+                <img src="/res/images/lv-icon-home_1.png?v=20171209.193010" alt="回到首页" class="icon">
+                <span class="text">首页</span>
+            </a>
+            <div class="bottom-toolbar">
+                <div class="left-btns-zone">
+                    <ul class="tool-btns">
+                        <li class="item" style="width: 1.88rem" onclick="$('.packGiftDia').fadeIn(300)">
+                            <img src="/res/images/icon-gifts.png?v=20171209.193011" alt="" class="icon">
+                            <span class="tetx">赠送</span>
+                        </li>
+                        <!--<li class="item">-->
+                        <!--<img src="/res/images/icon-more1.png?v=20171209.193010" alt="" class="icon">-->
+                        <!--<span class="tetx">更多</span>-->
+                        <!--</li>-->
+                    </ul>
+                </div>
+                <div class="right-btns-zone">
+                    <div class="btns">
+                        {if $is_vip == 1}
+                            <!--已购买-->
+                            <button style="background:#108ee9" type="button" onclick="window.open('{:url('index/live_in')}?id={$info.id}','_self')" class="btn buy-btn">
+                                进入直播间
+                            </button>
+                        {else}
+                            {if $info.price > 0}{
+                                <!-- <button type="button" onclick="$('#pay_dialog').fadeIn(300)" class="btn buy-btn">立即购买：￥ {$info.price}</button> -->
+                                <button type="button" onclick="buy('{$info.id}')" class="btn buy-btn">立即购买：￥ {$info.price}</button>
+                            {else}
+                                <button type="button" onclick="free('{$info.id}')" class="btn buy-btn">免费领取</button>
+                            {/if}
+                        {/if}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+
+</body>
+</html>

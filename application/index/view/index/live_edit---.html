@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <!-- 添加到主屏后的标题（iOS 6 新增） -->
+    <meta name="apple-mobile-web-app-title" content="启蒙">
+    <!-- 是否启用 WebApp 全屏模式，删除苹果默认的工具栏和菜单栏 -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <!-- 设置苹果工具栏颜色 -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <!-- 添加智能 App 广告条 Smart App Banner（iOS 6+ Safari） -->
+    <meta name="apple-itunes-app" content="app-id=myAppStoreID, affiliate-data=myAffiliateData, app-argument=myURL">
+    <!-- 忽略页面中的数字识别为电话，忽略email识别 -->
+    <meta name="format-detection" content="telephone=no">
+    <title> 修改直播间 </title>
+    <link rel="stylesheet" href="/res/pltf/live/css/reset.7588.css?v=20171209.193011">
+    <link rel="stylesheet" href="/res/pltf/live/css/main.9707.css?v=20180105.110503">
+
+
+    <script src="/res/lib/jquery-3.1.0.min.js?v=20171209.193011"></script>
+
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+
+</head>
+<body>
+
+<div id="app">
+    <div class="in-main" style="">
+        <section class="create-wrapper">
+            <div class="create-main">
+                <ul class="column-wrapper">
+                    <li class="item" onclick="$('.amend-info-dialog').fadeIn(300)">
+                        <div class="flex-wrap"><span class="account-cover-title">直播间头像</span>
+                            <div class="account-cover-zone" style="">
+                                <img id="account-cover-image" alt="" class="cover-image"
+                                     src="{$user_info.photo}">
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+                <ul class="column-wrapper">
+                    <li class="item" onclick="show_alert('胡大官人')">
+                        <div class="flex-wrap "><span class="i-option-title">直播间名称</span> <span class="i-option-main">{$user_info.live_name}</span></div>
+                    </li>
+                    <li class="item" onclick="show_alert('胡大官人的启蒙微课直播间')">
+                        <div class="flex-wrap"><span class="i-option-title">直播间简介</span> <span class="i-option-main">{$user_info.att_desc}</span></div>
+                    </li>
+                    <li class="item" onclick="show_alert('https://live.wekuo.com/lv/a/2052')">
+                        <div class="flex-wrap"><span class="i-option-title">直播间链接</span> <span class="i-option-main">https://live.wekuo.com/lv/a/2052</span></div>
+                    </li>
+                </ul>
+                <!--<ul class="column-wrapper">-->
+                <!--<li class="item">-->
+                <!--<div class="flex-wrap"><span class="i-option-title">直播间管理员</span>-->
+                <!--<div class="i-option-main">-->
+                <!--<ul class="avatar-list"></ul>-->
+                <!--</div>-->
+                <!--</div>-->
+                <!--</li>-->
+                <!--</ul>-->
+                <!--<ul class="column-wrapper">-->
+                <!--<li class="item">-->
+                <!--<div class="flex-wrap"><span class="account-cover-title">售前咨询图片</span>-->
+                <!--<div class="account-cover-zone" style="display: none;"><img alt="" class="cover-image">-->
+                <!--</div>-->
+                <!--</div>-->
+                <!--</li>-->
+                <!--<li class="item">-->
+                <!--<div class="flex-wrap"><span class="account-cover-title">售后客服图片</span>-->
+                <!--<div class="account-cover-zone" style="display: none;"><img alt="" class="cover-image">-->
+                <!--</div>-->
+                <!--</div>-->
+                <!--</li>-->
+                <!--</ul>-->
+            </div>
+            <div class="create-wrapper-footer">
+                <button type="button" class="btn">保存修改</button>
+            </div>
+        </section>
+    </div>
+    <div class="in-main" style="display: none;">
+        <div class="not-create-zone">
+            <div class="none-top"><img src="https://cache1.qlchat.com/styles/wtwap/img/live/ico_norecord7.png" alt=""
+                                       class="none-tip-img">
+                <p class="none-tip">你还没创建直播间</p></div>
+            <button title="一键创建直播间" class="create-btn">一键创建直播间</button>
+            <ul class="back-tips">
+                <li>所有功能全部免费，永久免费</li>
+                <li>来自腾讯阿里等全球一流互联网公司前员工组成的超强研发团队</li>
+                <li>中国行业最领先的HTTP云直播技术</li>
+            </ul>
+            <ul class="back-tips">
+                <li>一个直播间就是一个网校，一个直播就是一堂微课</li>
+                <li>创建直播数量和嘉宾听众人数均无上限</li>
+                <li>内容永久回听</li>
+                <li>目前我们所有提现均不收取手续费</li>
+                <li>红包赞赏和私问增加额外收入</li>
+                <li>职场充电宝|阿何有话说等百万大号已入驻</li>
+                <li>奶爸、阿何等众多大咖的选择</li>
+            </ul>
+        </div>
+    </div>
+
+    <!--内容弹层-->
+    <div class="dialog alter-dialog" style="display: none;">
+        <div class="dialog-bg"></div>
+        <div class="center-main">
+            <div class="dialog-content"><h4 class="title"></h4>
+                <div class="textarea-zone" style=""><textarea class="textarea-control"
+                                                              placeholder="">1123124124</textarea></div>
+                <div class="textarea-zone" style="display: none;">
+                    <p class="textarea-control"></p>
+                </div>
+            </div>
+            <div class="dialog-footer"><!---->
+                <a href="javascript:;" class="dialog-confirm-btn dialog-btn confirm"
+                   onclick="$('.alter-dialog').hide()">确定</a>
+            </div>
+        </div>
+    </div>
+
+
+    <!--更改图片-->
+    <div class="dialog amend-info-dialog" style="display: none;">
+        <div class="dialog-bg"></div>
+        <div class="dialog-main">
+            <div class="dialog-content">
+                <div class="amend-avatar-zone">
+                    <img id="cover-image" alt="" class="avatar preview"
+                         src="https://img.wekuo.com/upload/user/portrait/2378148/20180126_175014?imageView2/2/w/144">
+                </div>
+                <button type="button" class="upload-btn">点击上传（更改）图片</button>
+            </div>
+            <div class="dialog-footer"><a href="javascript:;" class="dialog-cancel-btn dialog-btn cancle" onclick="$('.amend-info-dialog').hide();">取消</a> <a
+                    href="javascript:;" class="dialog-confirm-btn dialog-btn confirm" >确定</a>
+            </div>
+        </div>
+    </div>
+
+
+    <!--<div class="dialog order-details-dialog" style="display: none;">-->
+    <!--<div class="dialog-bg"></div>-->
+    <!--<div class="fixed-main">-->
+    <!--<div class="details-wrapper">-->
+    <!--<section class="live-setting-admin">-->
+    <!--<div id="owner-content-box" class="creater-box"><h3 class="lssd-hd">创建者</h3>-->
+    <!--<ul class="lssd-plist">-->
+    <!--<li class="lssd-pline"><img alt="" class="lssd-data-img"-->
+    <!--src="https://img.wekuo.com/upload/user/portrait/2378148/20180126_175014?imageView2/2/w/100">-->
+    <!--<span class="lssd-data-name">胡大官人</span></li>-->
+    <!--</ul>-->
+    <!--</div> &lt;!&ndash;&ndash;&gt;</section>-->
+    <!--<a href="javascript:;" class="live-btn">-->
+    <!--邀请管理员-->
+    <!--</a></div>-->
+    <!--<div class="close-zone"><span class="close"></span></div>-->
+    <!--</div>-->
+    <!--</div>-->
+
+
+</div>
+
+
+<script>
+    function show_alert(text) {
+        $('.textarea-control').val(text);
+        $('.alter-dialog').fadeIn(300);
+    }
+</script>
+
+
+</body>
+</html>

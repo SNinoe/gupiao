@@ -1,0 +1,53 @@
+<?php
+    if(C('LAYOUT_ON')) {
+        echo '{__NOLAYOUT__}';
+    }
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>跳转提示</title>
+    <style type="text/css">
+        *{ padding: 0; margin: 0; }
+        body{ background: #fff; font-family: '微软雅黑'; color: #333; font-size: 16px; }
+        .null{width: 100%;height: 20px;margin-bottom: 10px}
+        .system-message{ padding: 24px 48px; }
+        .system-message p{width: 100%; text-align: center; font-weight: bolder; line-height: 120px; margin-bottom: 12px; }
+        .system-message .success-p{font-size: 100px;color:#008000;text-shadow:10px 10px 10px rgba(0,128,0,.5)}
+        .system-message .failure-p{font-size: 100px;color:#FF0000;text-shadow:10px 10px 10px rgba(255,0,0,.5)}
+        .system-message .jump{ padding-top: 10px}
+        .system-message .jump a{ color: #0000ff;}
+        .system-message .success,.system-message .error{ line-height: 1.8em; font-size: 36px }
+        .system-message .detail{ font-size: 12px; line-height: 20px; margin-top: 12px; display:none}
+    </style>
+</head>
+<body>
+<div class="null"></div>
+<div class="system-message">
+    <?php if(isset($message)) {?>
+    <p class="success-p" style="font-size: 100px">success</p>
+    <p class="success"><?php echo($message); ?></p>
+    <?php }else{?>
+    <p class="failure-p">failure</p>
+    <p class="error"><?php echo($error); ?></p>
+    <?php }?>
+    <p class="detail"></p>
+    <p class="jump">
+        <b id="wait"><?php echo($waitSecond); ?></b>秒后，页面自动跳转，点<a id="href" href="<?php echo($jumpUrl); ?>">立即跳转</a>，可立即跳转。
+    </p>
+</div>
+<script type="text/javascript">
+    (function(){
+        var wait = document.getElementById('wait'),href = document.getElementById('href').href;
+        var interval = setInterval(function(){
+            var time = --wait.innerHTML;
+            if(time <= 0) {
+                location.href = href;
+                clearInterval(interval);
+            };
+        }, 1000);
+    })();
+</script>
+</body>
+</html>

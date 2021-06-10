@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'>
+    <!-- 添加到主屏后的标题（iOS 6 新增） -->
+    <meta name="apple-mobile-web-app-title" content="启蒙">
+    <!-- 是否启用 WebApp 全屏模式，删除苹果默认的工具栏和菜单栏 -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <!-- 设置苹果工具栏颜色 -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <!-- 添加智能 App 广告条 Smart App Banner（iOS 6+ Safari） -->
+    <meta name="apple-itunes-app" content="app-id=myAppStoreID, affiliate-data=myAffiliateData, app-argument=myURL">
+    <!-- 忽略页面中的数字识别为电话，忽略email识别 -->
+    <meta name="format-detection" content="telephone=no">
+    <title> 热门 </title>
+    <link rel="stylesheet" href="/res/pltf/live/css/reset.7588.css?v=20171209.193011">
+    <link rel="stylesheet" href="/res/pltf/live/css/main.9707.css?v=20180105.110503">
+    <!--<link rel="shortcut icon" id="favicon" href="/res/pltf/live/favicon.ico?v=20171209.193011"/>-->
+    <!--<link rel="bookmark" href="/res/pltf/live/favicon.ico?v=20171209.193011"/>-->
+    <script src="/res/lib/vue-2.2.6/vue.min.js?v=20171209.193011"></script>
+    <script src="/res/lib/jquery-3.1.0.min.js?v=20171209.193011"></script>
+    <!--<script src="/res/app.10049.js?v=20180123.230545"></script>-->
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+
+
+<div id="app" class="in-main fixed-bottom-bar">
+    <section class="lv-lesson-mod">
+        <div class="template-mod-header">
+            <h4 class="title">直播</h4>
+            <button type="button" class="replace-btn">
+                <img src="/res/images/icon-replace@24x24.png?v=20171209.193010" alt="" class="icon">
+                <a href=""><span class="text">换一换</span></a>
+            </button>
+        </div>
+
+        <ul class="lessons-main">
+            {foreach name="hot" item="val" key="key"}
+                <li class="item border-1px">
+                    <a href="{:url('index/index/live_detail')}?id={$val.id}" class="nav-block">
+                        <div class="cover-img">
+                            <img alt="" class="img" src="{$val.cover_pic}">
+                        </div>
+                        <div class="main"><h4 class="ls-name">{$val.title}</h4>
+                            <div class="times-zone"><span class="t-deteil">{$val.state}</span></div>
+                            <div class="learned"><i class="icon-listen"></i><span>{$val.enlist}</span>人次</div>
+                            <span class="price">
+                                {if $val.price > 0}
+                                    ￥ {$val.price}
+                                {else}
+                                    免费
+                                {/if}
+                            </span>
+                        </div>
+                    </a>
+                </li>
+            {/foreach}
+        </ul>
+
+        <div class="text-center">
+            <button type="button" class="load-more-btn"  onClick="window.location.href='all'">
+                <span class="text">查看全部<span v-text="liveCount"> {$count} </span>个</span>
+            </button>
+        </div>
+
+    </section>
+
+    <!-- 底部导航 -->
+    <nav class="menu-bottom-bar" id="menu-bottom-bar">
+        <a v-if="!hideToTop" v-cloak href="#" ref="toTopBtn" id="totop-btn" type="button" class="totop-btn"><img
+                class="icon" src="/res/images/lv-totop.png?v=20171209.193011" alt="回到顶部"></a>
+        <ul class="menu-bar border-1px">
+            <li class="item">
+                <a class="nav-block" href="{:url('index/index')}" title="首页">
+                    <i class="icon icon-home"></i>
+                    <span class="text">首页</span>
+                </a>
+            </li>
+
+            <li class="item" >
+                <a class="nav-block" href="{:url('index/hot')}" title="热门">
+                    <i class="icon icon-recommend"></i>
+                    <span class="text">热门</span>
+                </a>
+            </li>
+            <li class="item">
+                <a class="nav-block" href="{:url('index/mine')}" title="我的">
+                    <i class="icon icon-me"></i>
+                    <span class="text">我的</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <script type="text/javascript">
+        (function () {
+            var loctPathname = window.location.pathname;
+            if (('/', '/live/index', '/live/index/').indexOf(loctPathname) >= 0) {
+                loctPathname = '/live/home';
+            }
+            var winHeight = $(window).height();
+            var minSHeight = winHeight - 200;
+            var menuBottomBar = document.getElementById('menu-bottom-bar');
+            var menuList = menuBottomBar.getElementsByClassName('nav-block');
+            for (var i = menuList.length - 1; i >= 0; i--) {
+                var item = menuList[i];
+                var itemHref = item.getAttribute('href');
+                if (itemHref.indexOf(loctPathname) >= 0) {
+                    item.setAttribute('href', 'javascript:;');
+                    $(item).parent('li').addClass('active');
+                }
+            }
+            minSHeight ? minSHeight = minSHeight : minSHeight = 600;
+            $(window).on('scroll', function (e) {
+                var s = $(window).scrollTop();
+                if (s > minSHeight) {
+                    $("#totop-btn").fadeIn(100);
+                } else {
+                    $("#totop-btn").fadeOut(200);
+                }
+                ;
+            });
+            $('body').on('click', '#totop-btn', function (e) {
+                e.preventDefault();
+                $('html, body').animate({
+                    scrollTop: 0
+                }, 500)
+            })
+        })()
+    </script>
+</div>
+
+
+
+
+
+
+
+
+</body>
+</html>

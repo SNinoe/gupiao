@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>授权出错</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    {include file="common/header" /}
+    {include file="common/script" /}
+
+</head>
+
+<body ontouchstart>
+
+<div class="weui-msg">
+    <div class="weui-msg__icon-area"><i class="weui-icon_msg-primary weui-icon-warn "></i></div>
+    <div class="weui-msg__text-area">
+        <h2 class="weui-msg__title">出错了</h2>
+        <p class="weui-msg__desc">
+
+        </p>
+    </div>
+    <div class="weui-msg__opr-area">
+        <p class="weui-btn-area">
+            <a href="{:url('index/auth/index')}" class="weui-btn weui-btn_primary">重新授权</a>
+            <!--<a href="javascript:;" class="weui-btn weui-btn_default">辅助操作</a>-->
+
+        </p>
+    </div>
+    <div class="weui-msg__extra-area">
+        <div class="weui-footer">
+            <p class="weui-footer__links">
+                <a href="javascript:void(0);" class="weui-footer__link">xrenz</a>
+                <a href="javascript:void(0);" class="weui-footer__link">意见反馈</a>
+            </p>
+            <!--<p class="weui-footer__text">Copyright © 2008-2016 weui.io</p>-->
+        </div>
+    </div>
+</div>
+
+<script src="__CDN__/assets/weiui/lib/jquery-2.1.4.js"></script>
+<script src="__CDN__/assets/weiui/lib/fastclick.js"></script>
+<script>
+    $(function () {
+        FastClick.attach(document.body);
+    });
+</script>
+<script src="__CDN__/assets/weiui/js/jquery-weui.js"></script>
+
+
+</body>
+</html>

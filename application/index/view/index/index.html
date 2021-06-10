@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <!-- 添加到主屏后的标题（iOS 6 新增） -->
+    <meta name="apple-mobile-web-app-title" content="启蒙">
+    <!-- 是否启用 WebApp 全屏模式，删除苹果默认的工具栏和菜单栏 -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <!-- 设置苹果工具栏颜色 -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <!-- 添加智能 App 广告条 Smart App Banner（iOS 6+ Safari） -->
+    <meta name="apple-itunes-app" content="app-id=myAppStoreID, affiliate-data=myAffiliateData, app-argument=myURL">
+    <!-- 忽略页面中的数字识别为电话，忽略email识别 -->
+    <meta name="format-detection" content="telephone=no">
+    <title>启蒙</title>
+    <link rel="stylesheet" href="/res/pltf/live/css/reset.7588.css?v=20171209.193011">
+    <link rel="stylesheet" href="/res/pltf/live/css/main.9707.css?v=20180105.110503">
+    <!--<link rel="stylesheet" href="/res/mui/css/mui.min.css">-->
+    <!--<link rel="shortcut icon" id="favicon" href="">-->
+    <!--<link rel="bookmark" href="">-->
+    <!--<script src="https://hm.baidu.com/hm.js?6cfa7389d4710fb5d507d0760890e334"></script>-->
+    <!--<script src="//hm.baidu.com/hm.js?40614682cfde5e829b91e313e316fc26"></script>-->
+    <!--<script src="/res/lib/vue-2.2.6/vue.min.js?v=20171209.193011"></script>-->
+    <script src="/res/lib/jquery-3.1.0.min.js?v=20171209.193011"></script>
+    <!--<script src="/res/app.10049.js?v=20180123.230545"></script>-->
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!--<script src="/res/lib/wx/jweixin-1.2.0.js?v=20171209.193012"></script>-->
+    <!--<script src="/res/ctrl/wx_jssdk.9438.js?v=20180102.172521"></script>-->
+
+
+</head>
+<body>
+
+<div id="app" class="in-main fixed-bottom-bar">
+
+
+    <button type="button" class="live-search-zone bg-home">
+        <span class="search-inner bg-white" onclick="$('.search-dialog').fadeIn(300)">
+            <img src="/res/images/lv-icon-search2.svg?v=20171209.193011" alt="" class="icon">
+            <span class="text">搜索</span>
+        </span>
+    </button>
+
+    <div class="dialog search-dialog" style="display: none;">
+        <div class="dialog-bg"></div>
+        <div class="fixed-main">
+            <div id="" class="details-wrapper">
+                <div class="search-bar">
+                    <form action="{:url('index/all')}" class="search-bar-zone">
+                        <img src="/res/images/circle-icon-search3.png?v=20171209.193010" alt="搜索" class="icon"> 
+                        <input id="search-form" type="text" name="kw" placeholder="搜索内容" autocomplete="off" class="form-search">
+                        <button type="button" class="clear-btn" style="display: none;">
+                            <img src="/res/images/live-mess-del.png?v=20171209.193011" alt="" class="icon">
+                        </button>
+                    </form>
+                    <button type="submit" class="submit-btn">搜索</button>
+                </div>
+                <div class="block-mod" style="display: none;">
+                    <ul class="search-suggest-words"></ul>
+                </div>
+                <div class="block-mod">
+                    <div class="hot-search">
+                        <h6 class="his-title">热门搜索</h6>
+                        <ul class="hotword-list">
+                            {foreach name="hot_search" item="val" key="key"}
+                                <li class="item" value="{$val.keyword}">{$val.keyword}</li>
+                            {/foreach}
+                        </ul>
+                    </div>
+                    <div class="hot-search">
+                        <h6 class="his-title">推荐搜索</h6>
+                        <ul class="hotword-list">
+                            {foreach name="recomm_rearch" item="val" key="key"}
+                                <li class="item" value="{$val.keyword}">{$val.keyword}</li>
+                            {/foreach}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="close-zone"><span class="close" onclick="$('.search-dialog').hide()"></span></div>
+        </div>
+    </div>
+
+    {foreach name="classify" item="val" key="key"}
+        <ul class="subject-nav " style="margin-bottom: 0px">
+            {foreach name="val" item="v" key="k"}
+                <li class="item">
+                    <a href="{:url('index/all')}?classify={$v.id}" class="nav-block"><img src="{$v.icon}" alt="" class="icon"><p class="text">{$v.name}</p></a>
+                </li>
+            {/foreach}
+        </ul>
+    {/foreach}
+
+    <ul class="subject-nav " onclick="$('.subscribing-dialog').fadeIn(300)" id="more" style="margin-bottom: 0px">
+        <li class="item">
+            <a href="javascript:;" class="nav-block">
+                <!--<img src="/res/images/lv-nav-mylesson.png?v=20171212.172949" alt="" class="icon">-->
+                <p class="text">+更多</p>
+            </a>
+        </li>
+    </ul>
+
+    <div class="subscribing-dialog " style="display: none;">
+        <div class="fixed-main">
+            <div class="details-wrapper">
+                <div class="subscribe-model">
+                    <h6 class="dtw-tit">更多课程</h6>
+                    <ul class="dtw-content">
+                        {foreach name="more_class" item="val" key="key"}
+                            <li class="item">
+                                <button type="button" class="dtwi-text">{$val.name}</button>
+                            </li>
+                        {/foreach}
+                    </ul>
+                </div>
+            </div>
+            <div class="close-zone"><span class="close" onclick="$('.subscribing-dialog').hide()"></span></div>
+        </div>
+    </div>
+
+    <!--<ul class="subject-nav " style="margin-bottom: 0px">-->
+    <!--<li class="item"><a href="/live/user/joinlive?_source=live_main" class="nav-block"><img-->
+    <!--src="/res/images/lv-nav-mylesson.png?v=20171212.172949" alt="" class="icon">-->
+    <!--<p class="text">我的课程</p></a></li>-->
+    <!--<li class="item"><a href="/live/hot?_source=live_main" class="nav-block"><img-->
+    <!--src="/res/images/lv-nav-hot.png?v=20171209.193010" alt="" class="icon">-->
+    <!--<p class="text">热门专题</p></a></li>-->
+    <!--</ul>-->
+    
+    {if condition="$livesing neq null"}
+    <section class="lv-lesson-mod" style="margin-top: 10px">
+        <div class="lesson-mod-header"><h3 class="title">正在直播</h3></div>
+        <div class="lessons-wrapper">
+            <ul class="lessons-main">
+                {foreach name="livesing" item="val" key="key"}
+                    <li class="item border-1px">
+                        <a href="{:url('index/index/live_detail')}?id={$val.id}" class="nav-block">
+                            <div class="cover-img">
+                                <img alt="" class="img" src="{$val.cover_pic}">
+                            </div>
+                            <div class="main">
+                                <h4 class="ls-name">{$val.title}</h4>
+                                <div class="times-zone">
+                                    <img alt="" style="height: 16px" class="img" src="/res/images/lv-icon-living.gif">
+                                    <span class="t-deteil">直播中</span>
+                                </div>
+                                <div class="learned"><i class="icon-listen"></i><span>{$val.enlist}</span>人次</div>
+                                <span class="price">
+                                    {if $val.price > 0}
+                                        ￥ {$val.price}
+                                    {else}
+                                        免费
+                                    {/if}
+                                </span>
+                            </div>
+                        </a>
+                    </li>
+                {/foreach}
+            </ul>
+            <div class="text-center" style="display: block;">
+                <button type="button" onclick="window.open('{:url('index/all')}?type=livesing','_self')" class="load-more-btn"><span class="text">查看更多</span></button>
+            </div>
+        </div>
+    </section>
+    {/if}
+
+    {if condition="$be_lives neq null"}
+    <section class="lv-lesson-mod" style="margin-top: 10px">
+        <div class="lesson-mod-header"><h3 class="title">即将开始</h3></div>
+        <div class="lessons-wrapper">
+            <ul class="lessons-main">
+                {foreach name="be_lives" item="val" key="key"}
+                    <li class="item border-1px">
+                        <a href="{:url('index/index/live_detail')}?id={$val.id}" class="nav-block">
+                            <div class="cover-img">
+                                <img alt="" class="img" src="{$val.cover_pic}">
+                            </div>
+                            <div class="main">
+                                <h4 class="ls-name">{$val.title}</h4>
+                                <div class="times-zone">
+                                    <!-- <span class="t-after">{$val.begin_time|date="m-d H:m",###}</span> -->
+                                    <span class="t-deteil">{$val.begin_time|date="m-d H:m",###} 准时开播</span>
+                                </div>
+                                <div class="learned"><i class="icon-listen"></i><span>{$val.enlist}</span>人次</div>
+                                <span class="price">
+                                    {if $val.price > 0}
+                                        ￥ {$val.price}
+                                    {else}
+                                        免费
+                                    {/if}
+                                </span>
+                            </div>
+                        </a>
+                    </li>
+                {/foreach}
+            </ul>
+            <div class="text-center" style="display: block;">
+                <button type="button" onclick="window.open('{:url('index/all')}?type=be_lives','_self')" class="load-more-btn"><span class="text">查看更多</span></button>
+            </div>
+        </div>
+    </section>
+    {/if}
+
+    {if condition="$recomm_lives neq null"}
+    <section class="lv-lesson-mod" style="">
+        <div class="lesson-mod-header">
+            <h3 class="title">为您推荐</h3> 
+            <a href="{:url('index/all')}?type=all" title="全部" class="more-btn">
+                <span class="text">全部</span> 
+                <img src="/res/images/lv-ico-arr-r.png?v=20171209.193011" alt="全部" class="icon">
+            </a>
+        </div>
+        <div class="lessons-wrapper">
+            <ul class="lessons-main">
+                {foreach name="recomm_lives" item="val" key="key"}
+                    <li class="item border-1px">
+                        <a href="{:url('index/index/live_detail')}?id={$val.id}" target="_blank" class="nav-block">
+                            <div class="cover-img">
+                                <img alt="" class="img" src="{$val.cover_pic}">
+                            </div>
+                            <div class="main">
+                                <h4 class="ls-name">{$val.title}</h4>
+                                <div class="times-zone"><span class="t-deteil">{$val.begin_time|date="Y-m-d H:i:s",###}</span></div>
+                                <div class="learned"><i class="icon-listen"></i> <span>{$val.enlist}</span>人次</div>
+                                <span class="price">
+                                    {if $val.price > 0}
+                                        ￥ {$val.price}
+                                    {else}
+                                        免费
+                                    {/if}
+                                </span>
+                            </div>
+                        </a>
+                    </li>
+                {/foreach}
+            </ul>
+        </div>
+    </section>
+
+    <div class="more-loading" style="display:none;"><p class="text">滑动加载更多...</p></div>
+    <div class="not-more" style="display:none;"><p class="text">没有更多了</p></div>
+    {/if}
+
+    <nav id="menu-bottom-bar" class="menu-bottom-bar">
+
+
+        <a href="#" id="totop-btn" type="button" class="totop-btn"
+           style="display: none;">
+            <img src="/res/images/lv-totop.png?v=20171209.193011" alt="回到顶部" class="icon">
+        </a>
+        <ul class="menu-bar border-1px">
+            <li class="item active"><a href="{:url('index/index')}" title="首页" class="nav-block"><i
+                    class="icon icon-home"></i> <span
+                    class="text">首页</span></a></li>
+            <li class="item"><a href="{:url('index/hot')}" title="热门" class="nav-block"><i
+                    class="icon icon-recommend"></i> <span
+                    class="text">热门</span></a></li>
+            <li class="item "><a href="{:url('index/mine')}" title="我的" class="nav-block"><i class="icon icon-me"></i>
+                <span class="text">我的</span></a></li>
+        </ul>
+    </nav>
+</div>
+
+<script type="text/javascript">
+    (function () {
+        var loctPathname = window.location.pathname;
+        if (('/', '/live/index', '/live/index/').indexOf(loctPathname) >= 0) {
+            loctPathname = '/live/home';
+        }
+        var winHeight = $(window).height();
+        var minSHeight = winHeight - 200;
+        var menuBottomBar = document.getElementById('menu-bottom-bar');
+        var menuList = menuBottomBar.getElementsByClassName('nav-block');
+        for (var i = menuList.length - 1; i >= 0; i--) {
+            var item = menuList[i];
+            var itemHref = item.getAttribute('href');
+            if (itemHref.indexOf(loctPathname) >= 0) {
+                item.setAttribute('href', 'javascript:;');
+                $(item).parent('li').addClass('active');
+            }
+        }
+        minSHeight ? minSHeight = minSHeight : minSHeight = 600;
+        $(window).on('scroll', function (e) {
+            var s = $(window).scrollTop();
+            if (s > minSHeight) {
+                $("#totop-btn").fadeIn(100);
+            } else {
+                $("#totop-btn").fadeOut(200);
+            }
+            ;
+        });
+        $('body').on('click', '#totop-btn', function (e) {
+            e.preventDefault();
+            $('html, body').animate({
+                scrollTop: 0
+            }, 500)
+        })
+    })()
+
+
+    // 点击选择分类
+    $('.hotword-list li').click(function(){
+        $('.hotword-list li').removeClass('actived');
+        $(this).addClass('actived');
+
+        var hotword= $('.hotword-list li.actived').attr('value');
+        console.log(hotword);
+
+        $('#search-form').val(hotword);
+    });
+
+    // 搜索表单 提交
+    $(".submit-btn").click(function(){
+        $(".search-bar-zone").submit();
+    });
+
+</script>
+
+</body>
+</html>

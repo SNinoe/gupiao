@@ -1,0 +1,9 @@
+(function(){var vue=null;var featuredOffset=0;var liveOffset=0;var lessonOffset=0;$(document).ready(function(){vue=App.vue({el:'#app',data:{hideToTop:'',featuredItems:[],featuredCount:0,liveItems:[],liveCount:0,lessonItems:[],lessonCount:0},methods:{beautyTimeStr:BeautyTools.beautyTimeStr,beautyPrice:BeautyTools.beautyPrice,loadLiveItems:loadLiveItems,loadFeaturedItems:loadFeaturedItems,loadLessonItems:loadLessonItems},created:function(){this.$nextTick(initPageData);},mounted:function(){}});});function loadFeaturedItems(){var featuredUrl='/live_/featured/query?limit=5&sort=leaner&offset='+featuredOffset;App.api(featuredUrl,function(rspData){if(!rspData||rspData.count<=0){return}
+vue.featuredItems=rspData.items;vue.featuredCount=rspData.count;featuredOffset=(featuredOffset+rspData.items.length)%parseInt(rspData.count);});}
+function loadLiveItems(){var url='/live_/info/recommend_query?limit=5&sort=leaner&offset='+liveOffset;App.api(url,function(rspData){if(!rspData||rspData.count<=0){return}
+vue.liveItems=rspData.items;vue.liveCount=rspData.count;liveOffset=(liveOffset+rspData.items.length)%parseInt(rspData.count);});}
+function loadLessonItems(){var url='lesson/series/query?state=2&is_free=0&order_by=sale_count&limit=5&offset='+lessonOffset;App.api(url,function(rspData){if(!rspData||rspData.count<=0){return}
+vue.lessonItems=[];for(var i=0;i<rspData.items.length;i++){var lesson=rspData.items[i];var selector='#lesson-config-covers .lesson-config-cover-'+lesson.id;var liveCover=$(selector).val();if(!!liveCover){lesson.cover_image=liveCover;}
+vue.lessonItems.push(lesson);}
+vue.lessonCount=rspData.count;lessonOffset=(lessonOffset+rspData.items.length)%parseInt(rspData.count);});}
+function initPageData(){loadFeaturedItems();loadLiveItems();loadLessonItems();}})();

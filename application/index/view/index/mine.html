@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <!-- 添加到主屏后的标题（iOS 6 新增） -->
+    <meta name="apple-mobile-web-app-title" content="启蒙">
+    <!-- 是否启用 WebApp 全屏模式，删除苹果默认的工具栏和菜单栏 -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <!-- 设置苹果工具栏颜色 -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <!-- 添加智能 App 广告条 Smart App Banner（iOS 6+ Safari） -->
+    <meta name="apple-itunes-app" content="app-id=myAppStoreID, affiliate-data=myAffiliateData, app-argument=myURL">
+    <!-- 忽略页面中的数字识别为电话，忽略email识别 -->
+    <meta name="format-detection" content="telephone=no">
+    <title> 我的 </title>
+    <link rel="stylesheet" href="/res/pltf/live/css/reset.7588.css?v=20171209.193011">
+    <link rel="stylesheet" href="/res/pltf/live/css/main.9707.css?v=20180105.110503">
+    <!--<link rel="shortcut icon" id="favicon" href="/res/pltf/live/favicon.ico?v=20171209.193011">-->
+    <!--<link rel="bookmark" href="/res/pltf/live/favicon.ico?v=20171209.193011">-->
+    <!--<script src="/res/lib/vue-2.2.6/vue.min.js?v=20171209.193011"></script>-->
+
+    <script src="/res/lib/jquery-3.1.0.min.js?v=20171209.193011"></script>
+    <!--<script src="/res/app.10049.js?v=20180123.230545"></script>-->
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+
+</head>
+<body>
+
+<div id="app" class="in-main fixed-bottom-bar">
+    <section class="my-info">
+        <a href="javascript:;" class="nav-block">
+            <div class="avatar-zone">
+                <img class="avatar" src="{$user_info.photo}">
+                <!--<div class="icon-vip" style="display: block">-->
+                    <!--<img src="/res/images/icon-vip_1@24x24.png?v=20171209.193011" alt="" class="icon">-->
+                <!--</div>-->
+            </div>
+            <div class="info-right-zone">
+                <div class="user-name-zone"><strong class="name">{$user_info.nickname}</strong>
+                    <div class="icon-tag">尊享会员</div>
+                </div>
+            </div>
+        </a>
+    </section>
+    <!--<div class="show-buyvip-wrapper" style=""><a href="http://www.wekuo.com/l/s/lvip?_source=yj_mine" title="享受会员"-->
+    <!--class="navgation"><img-->
+    <!--src="/res/images/vip-column-live.png?v=20171212.172949" alt="" class="vip-column-pic"></a>-->
+    <!--</div>-->
+    <ul class="mytab-menu-list">
+        <li class="item ">
+            <a href="{:url('index/joinlive')}" class="nav-block"><i class="icon icon-joinin"></i>
+                <div class="i-main border-1px">
+                    <div class="text">我的课程</div>
+                </div>
+            </a>
+        </li>
+        <li class="item ">
+            <a href="{:url('index/follow')}" class="nav-block"><i class="icon icon-follow"></i>
+                <div class="i-main border-1px">
+                    <div class="text">我关注的直播间</div>
+                </div>
+            </a>
+        </li>
+    </ul>
+    <ul class="mytab-menu-list">
+        <!--<li class="item "><a href="/l/s/lvip" class="nav-block"><i class="icon icon-myvip"></i>-->
+        <!--<div class="i-main border-1px">-->
+        <!--<div class="text">我的会员</div>-->
+        <!--</div>-->
+        <!--</a></li>-->
+        <!-- <li class="item ">
+            <a href="{:url('index/wallet')}" class="nav-block"><i class="icon icon-money"></i>
+                <div class="i-main border-1px">
+                    <div class="text">我的钱包</div>
+                </div>
+            </a>
+        </li> -->
+        <li class="item ">
+            <a href="{:url('index/center')}" class="nav-block"><i class="icon icon-gifts"></i>
+                <div class="i-main border-1px">
+                    <div class="text">赠送给好友</div>
+                </div>
+            </a>
+        </li>
+    </ul>
+    <ul class="mytab-menu-list">
+        <!--<li class="item "><a href="/live/user/teachlives" class="nav-block"><i class="icon icon-teachlist"></i>-->
+        <!--<div class="i-main border-1px">-->
+        <!--<div class="text">我讲的课</div>-->
+        <!--</div>-->
+        <!--</a></li>-->
+        <li class="item ">
+            <a href="{:url('index/accounts')}" class="nav-block"><i class="icon icon-manage"></i>
+                <div class="i-main border-1px">
+                    <div class="text">我的直播间</div>
+                </div>
+            </a>
+        </li>
+
+        <li class="item ">
+            <a href="{:url('index/wallet')}" class="nav-block"><i class="icon icon-earnings"></i>
+                <div class="i-main border-1px">
+                    <div class="text">直播间收益</div>
+                </div>
+            </a>
+        </li>
+    </ul>
+    <!--<ul class="mytab-menu-list" style="display: none;">-->
+    <!--<li class="item undispos"><a href="/live/myyouda/pagehome" class="nav-block">-->
+    <!--<i class="icon icon-myyouda"></i>-->
+    <!--<div class="i-main border-1px">-->
+    <!--<div class="text">我的有答主页</div>-->
+    <!--</div>-->
+    <!--</a></li>-->
+    <!--<li class="item"><a href="/live/my/heard" class="nav-block"><i class="icon icon-mylistened"></i>-->
+    <!--<div class="i-main border-1px">-->
+    <!--<div class="text">我听过的答案</div>-->
+    <!--</div>-->
+    <!--</a></li>-->
+    <!--<li class="item"><a href="/live/my/asked" class="nav-block"><i class="icon icon-myquize"></i>-->
+    <!--<div class="i-main border-1px">-->
+    <!--<div class="text">我问的问题</div>-->
+    <!--</div>-->
+    <!--</a></li>-->
+    <!--</ul>-->
+    <!--<ul class="mytab-menu-list">-->
+    <!--<li class="item"><a href="#" class="nav-block">-->
+    <!--<div class="i-main border-1px" style="text-align: center; color: rgb(16, 142, 233);">-->
+    <!--<div class="text" style="background: none; padding: 0px;">重新登录</div>-->
+    <!--</div>-->
+    <!--</a></li>-->
+    <!--</ul>-->
+    <nav id="menu-bottom-bar" class="menu-bottom-bar"><!---->
+        <ul class="menu-bar border-1px">
+            <li class="item"><a href="{:url('index/index')}" title="首页" class="nav-block"><i class="icon icon-home"></i>
+                <span
+                        class="text">首页</span></a></li>
+            <li class="item"><a href="{:url('index/hot')}" title="热门" class="nav-block"><i
+                    class="icon icon-recommend"></i> <span
+                    class="text">热门</span></a></li>
+            <li class="item active"><a href="{:url('index/mine')}" title="我的" class="nav-block"><i
+                    class="icon icon-me"></i>
+                <span class="text">我的</span></a></li>
+        </ul>
+    </nav>
+</div>
+
+
+</body>
+</html>

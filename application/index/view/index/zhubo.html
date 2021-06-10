@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <!-- 添加到主屏后的标题（iOS 6 新增） -->
+    <meta name="apple-mobile-web-app-title" content="启蒙">
+    <!-- 是否启用 WebApp 全屏模式，删除苹果默认的工具栏和菜单栏 -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <!-- 设置苹果工具栏颜色 -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <!-- 添加智能 App 广告条 Smart App Banner（iOS 6+ Safari） -->
+    <meta name="apple-itunes-app" content="app-id=myAppStoreID, affiliate-data=myAffiliateData, app-argument=myURL">
+    <!-- 忽略页面中的数字识别为电话，忽略email识别 -->
+    <meta name="format-detection" content="telephone=no">
+    <title> 直播间主页 </title>
+    <link rel="stylesheet" href="/res/pltf/live/css/reset.7588.css?v=20171014.104410">
+    <link rel="stylesheet" href="/res/pltf/live/css/main.9707.css?v=20180105.110156">
+    <!--<link rel="shortcut icon" id="favicon" href="/res/pltf/live/favicon.ico?v=20170722.014650">-->
+    <!--<link rel="bookmark" href="/res/pltf/live/favicon.ico?v=20170722.014650">-->
+    <!--<script src="https://hm.baidu.com/hm.js?6cfa7389d4710fb5d507d0760890e334"></script>-->
+    <!--<script src="//hm.baidu.com/hm.js?40614682cfde5e829b91e313e316fc26"></script>-->
+    <!--<script src="/res/lib/vue-2.2.6/vue.min.js?v=20170722.014743"></script>-->
+    <script src="/res/lib/jquery-3.1.0.min.js?v=20170722.014748"></script>
+    <!--<script src="/res/app.10049.js?v=20180125.195437"></script>-->
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+
+</head>
+<body>
+
+<script src="/res/lib/jquery.qrcode.min.js?v=20170724.172359"></script>
+<div id="app" class="in-main fixed-bottom-bar">
+    <div id="page-loading" style="display: none;">
+        <div id="loading-center">
+            <div id="loading-center-absolute"><img
+                    src="/res/images/loading-ripple.svg?v=20170818.152616" alt="加载中 ..."
+                    class="loader-pic"> <h5 class="loader-text">启蒙微课堂</h5></div>
+        </div>
+    </div>
+    <div class="account-header">
+        <div class="account-hdbg-zone">
+            <img class="account-bg" src="{$anchor.photo}">
+        </div>
+        <div class="account-main">
+            <div class="account-avatar-zone">
+                <img alt="" class="account-avatar" src="{$anchor.photo}">
+            </div>
+            <h2 class="account-title">{if $anchor.live_name}{$anchor.live_name}{else}{$anchor.nickname}的直播间{/if}</h2>
+            <div class="account-follow-num"><span class="num">{$anchor.be_guanzhu}</span>人关注</div>
+            <div class="account-desc" style="text-align: center;line-height: 25px">
+                {$anchor.introduce}
+            </div>
+            {if $is_follow == 1}
+                <button type="button" class="follow-btn" onClick="unFollow({$anchor.id})" style="color:#fff;background:#e08613;border:none">已关注</button>
+            {else}
+                <button type="button" class="follow-btn" onClick="doFollow({$anchor.id})">关注</button>
+            {/if}
+        </div>
+
+        <!--<a href="/live/account/edit" title="编辑直播间" target="_blank" class="edit-btn" style="display: block;"><img-->
+                <!--src="/res/images/lv-icon-edit.png?v=20170722.014523" alt="" class="icon"> <span-->
+                <!--class="text">编辑</span></a> &lt;!&ndash;&ndash;&gt; &lt;!&ndash;&ndash;&gt; -->
+        <!--<a id="account-notify-btn" href="javascript:;" title="订阅直播间"-->
+                                                              <!--class="subscribe-btn" style="">-->
+        <!--<img src="/res/images/icon-subscribe@24x24.png?v=20171030.215117" alt="" class="icon"> <span-->
+            <!--class="text">开启通知</span>-->
+        <!--</a> -->
+        <!--<a id="account-unnotify-btn" href="javascript:;" title="订阅直播间"-->
+                                            <!--class="subscribe-btn" style="display: none;"><img-->
+            <!--src="/res/images/icon-subscribe@24x24.png?v=20171030.215117" alt="" class="icon"> <span-->
+            <!--class="text">取消通知</span>-->
+        <!--</a>-->
+    </div>
+    <section class="lv-lesson-mod" style="">
+        <div class="lesson-mod-header"><h3 class="title">精品课程</h3></div>
+        <ul class="lessons-main">
+            {foreach name="lives" item="val" key="key"}
+            <li class="item border-1px">
+                <a href="{:url('index/index/live_detail')}?id={$val.id}" class="nav-block featured">
+                    <div class="cover-img">
+                        <img src="{$val.cover_pic}" alt="" class="img">
+                        <div class="lali-topic-bar"><span class="tip-price">￥ {$val.price}</span></div>
+                    </div>
+                    <div class="main">
+                        <h4 class="ls-name">{$val.title}</h4>
+                        <div class="teacher-zone">
+                            <div class="teacher-name">
+                                <span class="name">{$anchor.live_name}</span> 
+                                <span class="t-title">「{$val.desc|mb_substr=0,30}」</span>
+                            </div>
+                        </div>
+                        <div class="duration">音频+图文</div>
+                        <div class="learned"><i class="icon-listen"></i><span>{$val.enlist} </span>人次</div>
+                    </div>
+                </a>
+            </li>
+            {/foreach}
+        </ul>
+    </section>
+
+    <nav id="menu-bottom-bar" class="menu-bottom-bar">
+
+
+        <a href="#" id="totop-btn" type="button" class="totop-btn"
+           style="display: none;">
+            <img src="/res/images/lv-totop.png?v=20171209.193011" alt="回到顶部" class="icon">
+        </a>
+        <ul class="menu-bar border-1px">
+            <li class="item "><a href="{:url('index/index')}" title="首页" class="nav-block"><i class="icon icon-home"></i> <span
+                    class="text">首页</span></a></li>
+            <li class="item"><a href="{:url('index/hot')}" title="热门" class="nav-block"><i class="icon icon-recommend"></i> <span
+                    class="text">热门</span></a></li>
+            <li class="item "><a href="{:url('index/mine')}" title="我的" class="nav-block"><i class="icon icon-me"></i>
+                <span class="text">我的</span></a></li>
+        </ul>
+    </nav>
+</div>
+
+<script src="/res/layui/layer_mobile/layer.js"></script>
+<script type="text/javascript">
+(function () {
+    var loctPathname = window.location.pathname;
+    if (('/', '/live/index', '/live/index/').indexOf(loctPathname) >= 0) {
+        loctPathname = '/live/home';
+    }
+    var winHeight = $(window).height();
+    var minSHeight = winHeight - 200;
+    var menuBottomBar = document.getElementById('menu-bottom-bar');
+    var menuList = menuBottomBar.getElementsByClassName('nav-block');
+    for (var i = menuList.length - 1; i >= 0; i--) {
+        var item = menuList[i];
+        var itemHref = item.getAttribute('href');
+        if (itemHref.indexOf(loctPathname) >= 0) {
+            item.setAttribute('href', 'javascript:;');
+            $(item).parent('li').addClass('active');
+        }
+    }
+    minSHeight ? minSHeight = minSHeight : minSHeight = 600;
+    $(window).on('scroll', function (e) {
+        var s = $(window).scrollTop();
+        if (s > minSHeight) {
+            $("#totop-btn").fadeIn(100);
+        } else {
+            $("#totop-btn").fadeOut(200);
+        }
+        ;
+    });
+    $('body').on('click', '#totop-btn', function (e) {
+        e.preventDefault();
+        $('html, body').animate({
+            scrollTop: 0
+        }, 500)
+    })
+})()
+
+// 取消关注主播
+function unFollow(id)
+{
+    url = "{:url('index/unFollowAnthor')}";
+    
+    layer.open({
+        content: '确定要取消关注吗'
+        , btn: ['是的', '取消']
+        , yes: function (index) {
+            $.ajax({
+                type:"POST",
+                url:url+'?id='+id,
+                success:function(result) {
+                    layer.close(index);
+                    layer.open({type: 2});
+                    setTimeout(function () {
+                        layer.closeAll();
+                        layer.open({
+                            content: result.msg
+                            ,skin: 'msg'
+                            ,time: 2 //2秒后自动关闭
+                        });
+                    }, 1000);
+                    setTimeout(function () {
+                        location.replace(location.href);
+                    }, 3000);
+                }
+            })
+        }
+    });
+}
+
+
+// 关注主播
+function doFollow(id)
+{
+    url = "{:url('index/doFollowAnthor')}";
+    
+    layer.open({
+        content: '确定关注吗'
+        , btn: ['是的', '取消']
+        , yes: function (index) {
+            $.ajax({
+                type:"POST",
+                url:url+'?id='+id,
+                success:function(result) {
+                    layer.close(index);
+                    layer.open({type: 2});
+                    setTimeout(function () {
+                        layer.closeAll();
+                        layer.open({
+                            content: result.msg
+                            ,skin: 'msg'
+                            ,time: 2 //2秒后自动关闭
+                        });
+                    }, 1000);
+                    setTimeout(function () {
+                        location.replace(location.href);
+                    }, 3000);
+                }
+            })
+        }
+    });
+}
+
+</script>
+
+
+</body>
+</html>

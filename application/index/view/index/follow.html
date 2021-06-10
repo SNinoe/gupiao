@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'>
+    <!-- 添加到主屏后的标题（iOS 6 新增） -->
+    <meta name="apple-mobile-web-app-title" content="启蒙">
+    <!-- 是否启用 WebApp 全屏模式，删除苹果默认的工具栏和菜单栏 -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <!-- 设置苹果工具栏颜色 -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <!-- 添加智能 App 广告条 Smart App Banner（iOS 6+ Safari） -->
+    <meta name="apple-itunes-app" content="app-id=myAppStoreID, affiliate-data=myAffiliateData, app-argument=myURL">
+    <!-- 忽略页面中的数字识别为电话，忽略email识别 -->
+    <meta name="format-detection" content="telephone=no">
+    <title> 我关注的直播间 </title>
+    <link rel="stylesheet" href="/res/pltf/live/css/reset.7588.css?v=20171209.193011">
+    <link rel="stylesheet" href="/res/pltf/live/css/main.9707.css?v=20180105.110503">
+    <script src="/res/lib/jquery-3.1.0.min.js?v=20171209.193011"></script>
+
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+
+
+
+</head>
+<body>
+
+
+<div id="app">
+    <div class="in-main fixed-bottom-bar">
+        <section class="pagehome-wrapper">
+            <div class="pagehome-header">
+                <h4 class="pagehome-title">我关注的直播间</h4>
+                <!-- <a class="right-btn" href="/live/account/list" tittle="发现精彩直播间" target="_blank">发现精彩直播间</a> -->
+                <a class="slider-button" href="{:url('index/all')}">
+                    <div class="icon-wrap">
+                        <img class="icon" src="/res/images/lv-nav-hot.png?v=20171209.193010"
+                             v-cloak>
+                    </div>
+
+                    <div class="label-wrap">
+                        <label>
+                            <span>发现精彩直播间</span>
+                        </label>
+                    </div>
+                </a>
+            </div>
+
+            <div class="show-buyvip-wrapper" style="margin: 0 0 10px;" v-show="!isVip" v-cloak>
+                <a href="http://www.wekuo.com/l/s/lvip?_source=yj_followaccount" title="享受会员" class="navgation">
+                    <img src="/res/images/vip-column-live.png?v=20171212.172949" alt=""
+                         class="vip-column-pic">
+                </a>
+            </div>
+
+
+            <div class="accounts-list-zone">
+                <ul class="accounts-list">
+                    {foreach name='interest' item="val" key="key"}
+                        <li class="item">
+                            <a href="{:url('index/live_detail')}?id={$val.id}" title="蚂蚁说成长" style="display: initial;" class="block-navgat">
+                                <div class="account-main clearfix">
+                                    <div class="cover-zone">
+                                        <img alt="蚂蚁说成长" class="cover-img" src="{$val.cover_pic}">
+                                    </div>
+                                    <div class="account-info">
+                                        <h5 class="a-name">{$val.title}</h5>
+                                        <div class="a-desc">{$val.desc}</div>
+                                    </div>
+                                </div>
+                            </a>
+                            <button type="button" class="follow-btn" onClick="unFollow({$val.lid})">已关注</button>
+                        </li>
+                    {/foreach}
+                </ul>
+                <div class="more-loading" style="display: none;"><p class="text">正在加载更多...</p></div>
+                <div class="not-more" style="display: none;"><p class="text">---- 我是有底线的 ----</p></div>
+            </div>
+
+            {if condition="$interest eq null"}
+                <div class="lvcc-noline" id="not-account-list" style="display:block;">
+                    <img class="lvcc-nlimg" src="/res/images/live-noline.png?v=20171209.193010"
+                         alt="没有内容">
+                    <p class="lvcc-nltext">还没有关注直播间</p>
+                    <a class="lvcc-checkmore-btn" href="{:url('index/all')}" title="更多">发现精彩直播间</a>
+                </div>
+            {/if}
+
+            <div class="accounts-list-zone" v-if="accountList.length > 0" v-cloak>
+                <ul class="accounts-list">
+                    <li class="item" v-for="(item, index) in accountList">
+                        <a class="block-navgat" :href="item.home_url" :title="item.name" target="_blank">
+                            <div class="account-main clearfix">
+                                <div class="cover-zone">
+                                    <img class="cover-img" v-resize-src="item.cover_image" :alt="item.name">
+                                </div>
+                                <div class="account-info">
+                                    <h5 class="a-name" v-text="item.name"></h5>
+                                    <div class="a-desc" v-text="item.intro?item.intro:'高度机密'"></div>
+                                </div>
+                            </div>
+                        </a>
+                        <button type="button" class="follow-btn">已关注</button>
+                    </li>
+                </ul>
+                <div v-show="accountHasMorn" class="more-loading">
+                    <p class="text">正在加载更多...</p>
+                </div>
+                <div v-show="!accountHasMorn" class="not-more" v-cloak>
+                    <p class="text">没有更多了</p>
+                </div>
+            </div>
+
+            <div class="lvcc-noline" id="not-account-list" style="display: none">
+                <img class="lvcc-nlimg" src="/res/images/live-noline.png?v=20171209.193010"
+                     alt="没有内容">
+                <p class="lvcc-nltext">还没有关注直播间</p>
+                <a class="lvcc-checkmore-btn" href="/live/account/list" title="更多">发现精彩直播间</a>
+            </div>
+
+        </section>
+
+        <nav id="menu-bottom-bar" class="menu-bottom-bar">
+
+
+            <a href="#" id="totop-btn" type="button" class="totop-btn"
+               style="display: none;">
+                <img src="/res/images/lv-totop.png?v=20171209.193011" alt="回到顶部" class="icon">
+            </a>
+            <ul class="menu-bar border-1px">
+                <li class="item "><a href="{:url('index/index')}" title="首页" class="nav-block"><i
+                        class="icon icon-home"></i> <span
+                        class="text">首页</span></a></li>
+                <li class="item"><a href="{:url('index/hot')}" title="热门" class="nav-block"><i
+                        class="icon icon-recommend"></i> <span
+                        class="text">热门</span></a></li>
+                <li class="item "><a href="{:url('index/mine')}" title="我的" class="nav-block"><i class="icon icon-me"></i>
+                    <span class="text">我的</span></a></li>
+            </ul>
+        </nav>
+
+        <script src="/res/layui/layer_mobile/layer.js"></script>
+        <script type="text/javascript">
+            (function () {
+                var loctPathname = window.location.pathname;
+                if (('/', '/live/index', '/live/index/').indexOf(loctPathname) >= 0) {
+                    loctPathname = '/live/home';
+                }
+                var winHeight = $(window).height();
+                var minSHeight = winHeight - 200;
+                var menuBottomBar = document.getElementById('menu-bottom-bar');
+                var menuList = menuBottomBar.getElementsByClassName('nav-block');
+                for (var i = menuList.length - 1; i >= 0; i--) {
+                    var item = menuList[i];
+                    var itemHref = item.getAttribute('href');
+                    if (itemHref.indexOf(loctPathname) >= 0) {
+                        item.setAttribute('href', 'javascript:;');
+                        $(item).parent('li').addClass('active');
+                    }
+                }
+                minSHeight ? minSHeight = minSHeight : minSHeight = 600;
+                $(window).on('scroll', function (e) {
+                    var s = $(window).scrollTop();
+                    if (s > minSHeight) {
+                        $("#totop-btn").fadeIn(100);
+                    } else {
+                        $("#totop-btn").fadeOut(200);
+                    }
+                    ;
+                });
+                $('body').on('click', '#totop-btn', function (e) {
+                    e.preventDefault();
+                    $('html, body').animate({
+                        scrollTop: 0
+                    }, 500)
+                })
+            })()
+
+            // 取消关注
+            function unFollow(id)
+            {
+                $.post("{:url('index/unFollow')}",{id:id},function (res) {
+
+                    layer.open({
+                        content: res.msg
+                        ,skin: 'msg'
+                        ,time: 2 //2秒后自动关闭
+                    });
+                    
+                    setTimeout(function () {
+                        location.replace(location.href);
+                    }, 2000);
+
+                });
+
+            }
+
+        </script>
+
+
+
+    </div>
+</div>
+
+
+
+
+</body>
+</html>

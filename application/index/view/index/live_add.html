@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <!-- 添加到主屏后的标题（iOS 6 新增） -->
+    <meta name="apple-mobile-web-app-title" content="启蒙">
+    <!-- 是否启用 WebApp 全屏模式，删除苹果默认的工具栏和菜单栏 -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <!-- 设置苹果工具栏颜色 -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <!-- 添加智能 App 广告条 Smart App Banner（iOS 6+ Safari） -->
+    <meta name="apple-itunes-app" content="app-id=myAppStoreID, affiliate-data=myAffiliateData, app-argument=myURL">
+    <!-- 忽略页面中的数字识别为电话，忽略email识别 -->
+    <meta name="format-detection" content="telephone=no">
+    <title> 新建直播 </title>
+    <link rel="stylesheet" href="/res/pltf/live/css/reset.7588.css?v=20171209.193011">
+    <link rel="stylesheet" href="/res/pltf/live/css/main.9707.css?v=20180105.110503">
+
+    <!--<script src="/res/lib/vue-2.2.6/vue.min.js?v=20171209.193011"></script>-->
+    <script src="/res/lib/jquery-3.1.0.min.js?v=20171209.193011"></script>
+    <script src="/res/app.10049.js?v=20180123.230545"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+
+    <!--<link href="https://live.wekuo.com/ueditor/themes/default/css/ueditor.css" type="text/css" rel="stylesheet">-->
+
+    <!--<link rel="stylesheet" type="text/css" href="https://live.wekuo.com/ueditor/third-party/codemirror/codemirror.css">-->
+
+
+
+</head>
+<body style="">
+
+<link rel="stylesheet" href="/res/lib/mobiscroll/css/mobiscroll.min.css?v=20171209.193011">
+<link rel="stylesheet" href="/res/lib/mobiscroll/css/mobiscroll_date.min.css?v=20171209.193011">
+
+<div id="app" style="">
+    <div class="in-main" style="">
+        <form class="create-step-zone" style="" action="" method="post" id="form-live-add" enctype="multipart/form-data">
+            <div class="creat-step-mod step1" style="">
+                <ul class="created-input-list-mod">
+                    <li class="item">
+                        <label for="live-name" class="creat-label">主题名称 <i class="required">*</i></label>
+                        <input type="text" id="live-name" placeholder="请输入主题名称" class="creat-input" name="title">
+                    </li>
+
+                    <li class="item">
+                        <label for="live-teacher" class="creat-label">主讲嘉宾 <i class="required">*</i></label>
+                        <input type="text" id="live-teacher" placeholder="请输入主讲嘉宾" class="creat-input" name="author">
+                    </li>
+
+                    <li class="item">
+                        <label for="live-starttime" class="creat-label">开始时间 <i class="required">*</i></label>
+                        <input type="text" id="live-starttime" data-options='{}' placeholder="选择开始时间" class="creat-input start-time" readonly="" name="begin_time">
+                    </li>
+                </ul>
+                <ul class="created-input-list-mod" style="">
+                    <li class="item" style=""><label class="creat-label">直播简介 <i class="required">*</i></label>
+                        <div class="show_editor" style="">
+                            <div id="intro-editor" type="text/plain" class="edui-default" style="width: 100%;">
+                                <textarea style="height: 100px;width: 100%;border: 1px solid #e2e2e2;padding: 5px" name="desc"></textarea>
+                            </div>
+                        </div>
+                        <!--<div class="create-input-desc">-->
+                        <!--<p class="p1">电脑登录启蒙:http://live.wekuo.com</p>-->
+                        <!--<p class="p1">编辑直播简介效果更佳，支持图文混排，字体样式调整</p>-->
+                        <!--</div>-->
+                    </li>
+                </ul>
+                <div class="create-wrapper-footer">
+                    <button type="button" onclick="$('.step2').fadeIn(300);$('.step1').hide();" class="btn">下一步(1/2)</button>
+                </div>
+            </div>
+
+
+            <div class="creat-step-mod step2" style="display: none;">
+
+
+                <ul class="column-wrapper ">
+                    <li class="item" >
+                        <div class="flex-wrap"><span class="account-cover-title">封面</span>
+                            <div class="account-cover-zone" style="width: 60px;height: 60px">
+                                <img id="account-cover-image" alt="" class="cover-image" style="width: 60px;height: 60px" src="http://qm.aliycl.com//uploads/20180211/1744a4ef2ec3165d17bd6cbb739497f8.png" onclick="$('#fileUpload').click()">
+                                <input type="file" class="input-text" id="fileUpload" name="pic" style="display: none">
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+
+                <!--<div class="switch-list-mod">-->
+                    <!--<div class="switch-wrapper">-->
+                        <!--<div class="switch-zone"><h5 class="switch-item-text">同步发送通知</h5> <i class="icon-switch"></i>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--<div class="switch-illustrations"><p class="p1">开启后，将同步向关注直播间的用户发送通知（如果不希望马上推送，您可以稍后在直播详情页手动推送）</p>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--<div class="switch-list-mod" style="display: none;">-->
+                    <!--<div class="switch-wrapper">-->
+                        <!--<div class="switch-zone"><h5 class="switch-item-text">可单独参加</h5> <i class="icon-switch on"></i>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--<div class="switch-illustrations"><p class="p1">开启后，用户可以单独参加本直播，无需购买整个系列课。否则需要购买系列课才能参加本直播。</p>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <div class="switch-list-mod">
+                    <div class="switch-wrapper">
+                        <div class="switch-zone">
+                            <h5 id="price-title" class="switch-item-text">收费</h5> <i class="icon-switch"></i>
+                        </div>
+                        <div class="switch-input-zone" style="display: block;">
+                            <input type="number" min="1" step="0.01" placeholder="请输入收费金额(最小为1元)" class="switch-input" name="price">
+                            <span class="input-suffix">元</span>
+                        </div>
+                    </div>
+                </div>
+                <!--<div class="switch-list-mod" style="display: block;">-->
+                    <!--<div class="switch-wrapper">-->
+                        <!--<div class="switch-zone"><h5 class="switch-item-text">分销功能</h5> <i class="icon-switch"></i>-->
+                        <!--</div>-->
+                        <!--<div class="switch-input-zone" style="display: block;">-->
+                            <!--<input type="text" min="1" max="50" step="0.01" placeholder="请输入分销者的分成比例" class="switch-input"> -->
+                            <!--<span class="input-suffix">%</span>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--<div class="switch-illustrations">-->
+                        <!--<p class="p1">1.开启后，填写直播分销者的分成比例</p>-->
+                        <!--<p class="p1">2.分销比例仅可设置1%到50％</p>-->
+                        <!--<p class="p1">3.设置后可在课程介绍页点击邀请卡，发送给分销者</p>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <div class="select-type-mod"><h4 class="select-title">分类</h4>
+                    <ul class="type-list clearfix ">
+                        {foreach name="classify" item="val" key="key"}
+                            <li class="item  classify" ><span class="t-text actived" value="{$val.id}">{$val.name}</span></li>
+                        {/foreach}
+                        <input type="hidden" name="classify" value='' id="classify">
+
+                    </ul>
+                </div>
+
+                <div class="select-type-mod"><h4 class="select-title">年级</h4>
+                    <ul class="type-list clearfix ">
+                        {foreach name="grade" item="val" key="key"}
+                            <li class="item grade"><span class="t-text" value="{$val.id}">{$val.name}</span></li>
+                        {/foreach}
+                    </ul>
+                    <input type="hidden" name="grade" value='' id="grade">
+
+                    <!-- <ul class="type-list clearfix">
+                        <li class="item"><span class="t-text">高一</span></li>
+                        <li class="item"><span class="t-text">高一</span></li>
+                        <li class="item"><span class="t-text">高一</span></li>
+                    </ul> -->
+                </div>
+
+                <div class="create-wrapper-footer">
+                    <div class="btns-zone">
+                        <button type="button" onclick="$('.step2').hide();$('.step1').show();" class="btn">上一步</button>
+                        <button type="button" class="btn Submit">完成</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<link rel="stylesheet" href="/res/weiui/lib/weui.min.css">
+<link rel="stylesheet" href="/res/weiui/css/jquery-weui.css">
+
+<script src="/res/weiui/lib/fastclick.js"></script>
+<script>
+    $(function() {
+        FastClick.attach(document.body);
+    });
+</script>
+
+<script src="/res/weiui/js/jquery-weui.js"></script>
+
+
+<script>
+
+    $("#live-starttime").datetimePicker({
+        title: '开始时间',
+        years: [2018,2019],
+//        monthes: ['06', '07'],
+        onChange: function (picker, values, displayValues) {
+            console.log(values);
+            console.log($("#live-starttime").val());
+        }
+    });
+
+
+    // 点击选择分类
+    $('.classify span').click(function(){
+        $('.classify span').removeClass('actived');
+        $(this).addClass('actived');
+
+        $('.classify').removeClass('on');
+        $(this).parent().addClass('on');
+
+        var classify= $('.classify span.actived').attr('value');
+        console.log(classify);
+
+        $('#classify').val(classify);
+    });
+
+    // 点击选择年级
+    $('.grade span').click(function(){
+        $('.grade span').removeClass('actived');
+        $(this).addClass('actived');
+
+        $('.grade').removeClass('on');
+        $(this).parent().addClass('on');
+
+        var grade= $('.grade span.actived').attr('value');
+        console.log(grade);
+
+        $('#grade').val(grade);
+    });
+
+    
+
+    // 表单提交
+    $(".Submit").click(function(){
+        $("#form-live-add").submit();
+    });
+</script>
+
+<script type="text/javascript">
+$(function(){
+    // 图片上传框
+    $("#fileUpload").change(function() {
+        var $file = $(this);
+        var fileObj = $file[0];
+        var windowURL = window.URL || window.webkitURL;
+        var dataURL;
+        var $img = $(".cover-image");
+
+        if(fileObj && fileObj.files && fileObj.files[0]){
+            dataURL = windowURL.createObjectURL(fileObj.files[0]);
+            $img.attr('src',dataURL);
+        }else{
+            dataURL = $file.val();
+            var imgObj = document.getElementById("ImgPreview");
+            // 两个坑 : 1、在设置filter属性时，元素必须已经存在在DOM树中，动态创建的Node，也需要在设置属性前加入到DOM中，先设置属性在加入，无效；
+            //        2、src属性需要像下面的方式添加，上面的两种方式添加，无效；
+            imgObj.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale)";
+            imgObj.filters.item("DXImageTransform.Microsoft.AlphaImageLoader").src = dataURL;
+
+        }
+
+    });
+})
+</script>
+
+</body>
+</html>

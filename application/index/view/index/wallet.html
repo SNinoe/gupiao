@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'>
+    <!-- 添加到主屏后的标题（iOS 6 新增） -->
+    <meta name="apple-mobile-web-app-title" content="启蒙">
+    <!-- 是否启用 WebApp 全屏模式，删除苹果默认的工具栏和菜单栏 -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <!-- 设置苹果工具栏颜色 -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <!-- 添加智能 App 广告条 Smart App Banner（iOS 6+ Safari） -->
+    <meta name="apple-itunes-app" content="app-id=myAppStoreID, affiliate-data=myAffiliateData, app-argument=myURL">
+    <!-- 忽略页面中的数字识别为电话，忽略email识别 -->
+    <meta name="format-detection" content="telephone=no">
+    <title> 我的钱包 </title>
+    <link rel="stylesheet" href="/res/pltf/live/css/reset.7588.css?v=20171209.193011">
+    <link rel="stylesheet" href="/res/pltf/live/css/main.9707.css?v=20180105.110503">
+    <script src="/res/lib/jquery-3.1.0.min.js?v=20171209.193011"></script>
+
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+
+</head>
+<body>
+
+
+<div class="in-main" id="app">
+    <section class="profits-pro">
+        <p class="pro-text">可提现金额 (元)</p>
+        <div class="pro-number-zone">
+            <h3 id="be-withdraw-amount" class="pro-num" v-text="userMoneyData.money">{$user_info.balance}</h3>
+        </div>
+        {if $withdraw_ing}
+            <p class="withdraw-log-tip" style="display: block">有一笔提现正在审核中</p>
+        {/if}
+        <a href="javascript:;" class="withdrawal-record" onclick="$('#withdraw-dlg').fadeIn(300)" title="提现记录">提现记录</a>
+    </section>
+    <div class="profits-details">
+        <ol class="details-list">
+            <li class="item">
+                <strong class="num">
+                    {if $withdraw_ing}
+                        {$withdraw_ing.money}
+                    {else}
+                        0
+                    {/if}
+                </strong>
+                <p class="text">待结算（元）</p>
+            </li>
+            <li class="item" onclick="$('.leiji_dialog').fadeIn(300);">
+                <strong class="num">{$user_info.total_balance}</strong>
+                <p class="text">累计收益（元）</p>
+            </li>
+        </ol>
+        <p class="profits-tip-text">1、累计收益=可提现+已提现</p>
+        <p class="profits-tip-text">2、打赏的金额马上可以提现</p>
+        <p class="profits-tip-text">3、推广收益的结算规则与直播间的收入相同</p>
+        <!--<p class="profits-tip-text">3、提现之前需要关注启蒙公众号  <a href="javascript:;" @click="showWekuoQrcode=true">启蒙二维码</a></p>-->
+
+    </div>
+    <div class="tab-main-zone">
+        <ul class="tab-list">
+            <li class="item" onclick="$('.dashang-dialog').fadeIn(300)">
+                <span class="i-text">打赏收益</span>
+                <div class="i-right">今日 <span class="i-right-num">¥ {$today_reward}</span></div>
+            </li>
+            <li class="item" onclick="$('.details-dialog').fadeIn(300)">
+                <span class="i-text">订单明细</span>
+                <div class="i-right">总计 <span class="i-right-num">¥ {$count_order}</span></div>
+            </li>
+            <!--<li class="item" @click="answerOrderModel = true">-->
+            <!--<span class="i-text">有答收益</span>-->
+            <!--<div class="i-right">今日 <span class="i-right-num">＋0</span></div>-->
+            <!--</li>-->
+            <!-- <li class="item" onclick="$('#sale-purchase-dlg').fadeIn(300);">
+                <span class="i-text">推广订单</span>
+                <div class="i-right">今日 <span class="i-right-num">¥33</span></div>
+            </li> -->
+        </ul>
+    </div>
+
+    <div class="withdraw-zone">
+        <p class="withdraw-text">每天可提现一次，最低1元，最大提现金额为2000元</p>
+        {if $withdraw_ing}
+            <button class="btn" type="button" title="申请提现">您有<span> {$withdraw_ing.money} </span>元的提现正在处理中</button>
+        {else}
+            <button class="btn" onclick="$('.tixian_dialog').fadeIn(300)" type="button" title="申请提现">申请提现</button>
+        {/if}
+    </div>
+
+
+    <!--打赏弹层-->
+    <div id="reward-purchase-dlg" class="dialog order-details-dialog dashang-dialog" style="display: none">
+        <div class="dialog-bg"></div>
+        <div class="fixed-main">
+            <div id="reward-purchases-list" class="details-wrapper">
+                <ul class="pur-list">
+                    <!-- <li class="item">
+                        <div class="will-pro">累计总收益：
+                            <span class="num-zone">¥<span class="pro-num">12.50</span></span>
+                        </div>
+                    </li> -->
+                    <li class="item">
+                        <div class="will-pro">打赏收益：
+                            <span class="num-zone">¥ <span class="pro-num">{$count_reward}</span></span>
+                        </div>
+                    </li>
+                </ul>
+
+                <div class="details-main">
+                    <ul class="details-list">
+                        {foreach name="list_reward" item="val" key="key"}
+                            <li v-for="item in purchaseList" class="item">
+                                <div class="i-surface">
+                                    <div class="time-zone">
+                                        <p class="day">{$val.create_time|date="m-d",###}</p>
+                                        <span class="hour">{$val.create_time|date="H:i",###}</span>
+                                    </div>
+                                    <div class="info-main clearfix">
+                                        <div class="avatar-zone">
+                                            <img class="avrtar" src="{$val.photo}" alt="">
+                                        </div>
+                                        <h4 class="name">{$val.nickname}</h4>
+                                        <p class="desc">{$val.title}</p>
+                                    </div>
+                                    <div class="statistics">
+                                        <div class="number-zone">＋<span class="num">{$val.reward_money}</span>元</div>
+                                    </div>
+                                </div>
+                            </li>
+                        {/foreach}
+                    </ul>
+                </div>
+                <div v-show="rewardPurchaseHasMore" class="m-loading"><span class="text">滑动加载更多...</span></div>
+                <div v-show="!rewardPurchaseHasMore" class="not-more" v-cloak><span class="text">没有更多了</span></div>
+            </div>
+            <div class="close-zone">
+                <span class="close" onclick="$('.dashang-dialog').hide();"></span>
+            </div>
+        </div>
+    </div>
+
+
+    <!--订单明细-->
+    <div id="purchases-dlg" v-show="showOrderModel" class="dialog order-details-dialog details-dialog"
+         style="display: none">
+        <div class="dialog-bg"></div>
+        <div class="fixed-main">
+            <div id="account-purchases-list" class="details-wrapper">
+                <div class="details-main" v-if="purchaseList.length > 0">
+                    <ul class="details-list">
+                        {foreach name="order_list" item="val" key="key"}
+                            <li class="item">
+                                <div class="i-surface">
+                                    <div class="time-zone">
+                                        <p class="day">{$val.create_time|date="m-d",###}</p>
+                                        <span class="hour">{$val.create_time|date="H:i",###}</span>
+                                    </div>
+                                    <div class="info-main clearfix">
+                                        <div class="avatar-zone">
+                                            <img class="avrtar" src="{$val.photo}" alt="">
+                                        </div>
+                                        <h4 class="name">{$val.username}</h4>
+                                        <p class="desc">{$val.live_name}</p>
+                                    </div>
+                                    <div class="statistics">
+                                        <div class="number-zone">＋<span class="num" v-text="item.income">{$val.amount}</span>元</div>
+                                        <!-- <div class="status wait" :class="{wait: !item.count_time}" v-text="!item.count_time ? '待结算': '已结算'">已结算</div> -->
+                                    </div>
+                                </div>
+                            </li>
+                        {/foreach}
+                    </ul>
+                    <div v-show="purchaseHasMore" class="m-loading" v-cloak><span class="text">滑动加载更多...</span>
+                    </div>
+                    <div v-show="!purchaseHasMore" class="not-more" v-cloak><span class="text">没有更多了</span></div>
+                </div>
+                <div id="purchase-empty-content" class="lvcc-noline" style="display: none">
+                    <img class="lvcc-nlimg" src="/res/images/live-noline.png?v=20170722.014648" alt="无记录">
+                    <p class="lvcc-nltext">还没有产生直播间收益</p>
+                </div>
+            </div>
+            <div class="close-zone">
+                <span class="close" onclick="$('.dialog').hide();"></span>
+            </div>
+        </div>
+    </div>
+
+
+    <!--累计收益-->
+    <div class="dialog order-details-dialog leiji_dialog" style="display: none">
+        <div class="dialog-bg"></div>
+        <div class="fixed-main">
+            <div id="account-purchases-list" class="details-wrapper">
+                <ul class="pur-list">
+                    <li class="item">
+                        <div class="will-pro">累计总收益：
+                            <span class="num-zone">¥<span class="pro-num">12.50</span></span>
+                        </div>
+                    </li>
+                    <li class="item">
+                        <div class="will-pro">回答收益：
+                            <span class="num-zone">¥<span class="pro-num">12.00</span></span>
+                        </div>
+                    </li>
+                </ul>
+
+                <div class="details-main">
+                    <ul class="details-list">
+                        <li v-for="item in purchaseList" class="item">
+                            <div class="i-surface">
+                                <div class="time-zone">
+                                    <p class="day">02-25</p>
+                                    <span class="hour">12:55</span>
+                                </div>
+                                <div class="info-main clearfix">
+                                    <div class="avatar-zone">
+                                        <img class="avrtar"
+                                             src="/res/images/live-moneybg.png?v=20171209.193010"
+                                             alt="">
+                                    </div>
+                                    <h4 class="name">黄佳煜</h4>
+                                    <p class="desc">如何选对行业和公司...</p>
+                                </div>
+                                <div class="statistics">
+                                    <div class="number-zone">＋<span class="num">12</span>元</div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="m-loading"><span class="text">更多...</span></div>
+                <div class="not-more"><span class="text">没有更多了</span></div>
+            </div>
+            <div class="close-zone">
+                <span class="close" onclick="$('.dialog').hide();"></span>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="sale-purchase-dlg"  class="dialog order-details-dialog"  style="display: none">
+        <div class="dialog-bg"></div>
+        <div class="fixed-main">
+            <div id="sale-purchases-list" class="details-wrapper">
+                <ul class="pur-list">
+                    <li class="item">
+                        <div class="will-pro">累计总收益：
+                            <span class="num-zone">¥<span class="pro-num">12.50</span></span>
+                        </div>
+                    </li>
+                    <li class="item">
+                        <div class="will-pro">推广收益：
+                            <span class="num-zone">¥<span class="pro-num">12.00</span></span>
+                        </div>
+                    </li>
+                </ul>
+
+                <div class="details-main">
+                    <ul class="details-list">
+                        <li v-for="item in purchaseList" class="item">
+                            <div class="i-surface">
+                                <div class="time-zone">
+                                    <p class="day">02-25</p>
+                                    <span class="hour">12:55</span>
+                                </div>
+                                <div class="info-main clearfix">
+                                    <div class="avatar-zone">
+                                        <img class="avrtar"
+                                             src="/res/images/live-moneybg.png?v=20171209.193010"
+                                             alt="">
+                                    </div>
+                                    <h4 class="name">黄佳煜</h4>
+                                    <p class="desc">如何选对行业和公司...</p>
+                                </div>
+                                <div class="statistics">
+                                    <div class="number-zone">＋<span class="num">12</span>元</div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div v-show="salePurchaseHasMore" class="m-loading"><span class="text">滑动加载更多...</span></div>
+                <div v-show="!salePurchaseHasMore" class="not-more" v-cloak><span class="text">没有更多了</span></div>
+            </div>
+            <div class="close-zone">
+                <span class="close" onclick="$('#sale-purchase-dlg').hide();"></span>
+            </div>
+        </div>
+    </div>
+
+
+    <!--提现记录-->
+    <div id="withdraw-dlg" class="dialog order-details-dialog" style="display: none">
+        <div class="dialog-bg"></div>
+        <div class="fixed-main">
+            <div id="withdraw-list-scroll" class="details-wrapper">
+                <section class="lv-money-details">
+                    <ul id="withdraw-list" class="lvmd-income-list">
+                        {foreach name="withdraw_list" item="val" key="key"}
+                            <li>
+                                <div class="incomer-info">
+                                    <!--<img class="incomer-pic1" src="/res/images/live-youjiang.jpg?v=20170722.014523"-->
+                                    <!--alt="启蒙">-->
+                                    <h4 class="nickname">提现：<span v-text="item.money">{$val.money}</span> 元</h4>
+                                    <p class="income-time">{$val.create_time|date="Y-m-d H:i",###}</p>
+                                </div>
+                                {if $val.state == 0}
+                                    <div class="withdraw-status" style="color:red;">申请中</div>
+                                {elseif $val.state == 1}
+                                    <div class="withdraw-status pass">通过</div>
+                                {elseif $val.state == -1}
+                                    <div class="withdraw-status">拒绝</div>
+                                {/if}
+                            </li>
+                        {/foreach}
+                    </ul>
+                    <div v-show="withdrawHasMore" class="m-loading" v-cloak><span class="text">滑动加载更多...</span></div>
+                    <div v-show="!withdrawHasMore" class="not-more" v-cloak><span class="text">没有更多了</span></div>
+                </section>
+                {if condition="$withdraw_list eq null"}
+                    <div id="withdraw-empty-content" class="lvcc-noline">
+                        <img class="lvcc-nlimg" src="/res/images/live-noline.png?v=20170722.014648" alt="无记录">
+                        <p class="lvcc-nltext">还没有提现记录</p>
+                    </div>
+                {/if}
+            </div>
+            <div class="close-zone">
+                <span class="close" onclick="$('.dialog').hide()"></span>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <!--申请提现-->
+    <div  class="withdraw-dialog tixian_dialog" style="display: none">
+        <div class="withdraw-wrapper" @click.self="showWithdrawModel = false">
+            <div class="dialog-main">
+                <div class="dialog-header">
+                    <h2 class="title" onclick="$('.tixian_dialog').hide()">申请提现</h2>
+                </div>
+                <div class="dialog-body">
+                    <h4 class="withdraw-tit">提现金额</h4>
+                    <div class="form-control-zone">
+                        <span class="ico">¥</span>
+                        <input ref="formNum" class="form-control-num" type="number" v-model="currentWithdraw" :max="maxWithdraw" value="">
+                    </div>
+                    <div class="withdraw-text-zone">
+                        可提现金额¥<span class="max-number" v-text="maxWithdraw">{$user_info.balance}</span>，
+                        <a href="javascript:;" onclick="$('.form-control-num').val('{$user_info.balance}')">全部提现</a>
+                    </div>
+                    <div class="withdraw-text-zone">
+                        <!--可提现金额¥<span class="max-number" v-text="maxWithdraw">0</span>，<a href="javascript:;" @click.prevent="currentWithdraw = maxWithdraw">全部提现</a>-->
+                        <!-- 提现之前需要关注启蒙公众号 <a href="javascript:;" onclick="$('.sale-tip-dialog').fadeIn(300)">启蒙二维码</a> -->
+                    </div>
+                    <!--<p class="profits-tip-text">3、提现之前需要关注启蒙公众号  <a href="javascript:;" @click="showWekuoQrcode=true">启蒙二维码</a></p>-->
+                    <div class="text-center">
+                        <button id="withdraw-btn" class="withdraw-btn" type="submit" onclick="withdrawOpt()">提现 </button>
+                    </div>
+                    <p class="tip-text">1-3个工作日到账</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!--关注公众号-->
+    <div v-show="showWekuoQrcode" class="dialog sale-tip-dialog" style="z-index: 1021;display: none" >
+        <div class="dialog-bg" @click="showWekuoQrcode=false"></div>
+        <div class="dialog-main">
+            <div class="dialog-title">关注启蒙公众号</div>
+            <div class="dialog-content">
+                <div class="share-qrcode-zone" id="url-qr-code">
+                    <img src="/res/images/qr-code.jpg?v=20171209.193010" alt=""
+                         class="share-qrcode">
+                </div>
+                <p class="p2">关注启蒙以后，返回这里完成提现</p>
+            </div>
+            <button type="button" class="dialog-footer closeDia" onclick="$('.sale-tip-dialog').hide();">我知道了</button>
+        </div>
+    </div>
+
+</div>
+
+<script src="/res/layui/layer_mobile/layer.js"></script>
+<script type="text/javascript">
+
+function withdrawOpt()
+{
+    var money = $('.form-control-num').val();
+
+    if(money > 0){
+          
+        $.post("{:url('index/applyCash')}",{money:money},function (res) {
+
+            layer.open({
+                content: res.msg
+                ,skin: 'msg'
+                ,time: 2 //2秒后自动关闭
+            });
+            
+            setTimeout(function () {
+                location.replace(location.href);
+            }, 2000);
+
+        });
+
+    }
+
+}
+
+
+</script>
+
+
+</body>
+</html>

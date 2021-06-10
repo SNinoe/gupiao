@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'>
+    <!-- 添加到主屏后的标题（iOS 6 新增） -->
+    <meta name="apple-mobile-web-app-title" content="启蒙">
+    <!-- 是否启用 WebApp 全屏模式，删除苹果默认的工具栏和菜单栏 -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <!-- 设置苹果工具栏颜色 -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <!-- 添加智能 App 广告条 Smart App Banner（iOS 6+ Safari） -->
+    <meta name="apple-itunes-app" content="app-id=myAppStoreID, affiliate-data=myAffiliateData, app-argument=myURL">
+    <!-- 忽略页面中的数字识别为电话，忽略email识别 -->
+    <meta name="format-detection" content="telephone=no">
+    <title> 赠送给好友 </title>
+    <link rel="stylesheet" href="https://img.wekuo.com/res/pltf/live/css/reset.7588.css?v=20171209.193011">
+    <link rel="stylesheet" href="https://img.wekuo.com/res/pltf/live/css/main.9707.css?v=20180105.110503">
+
+    <script src="https://img.wekuo.com/res/lib/jquery-3.1.0.min.js?v=20171209.193011"></script>
+
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+
+
+
+</head>
+<body>
+
+
+<div id="app" class="in-main fixed-bottom-bar">
+    <section class="pagehome-wrapper">
+        <div class="pagehome-header">
+            <h4 class="pagehome-title">赠礼中心</h4>
+            <a class="slider-button" href="{:url('index/all')}">
+                <div class="icon-wrap">
+                    <img class="icon" src="https://img.wekuo.com/res/images/lv-nav-hot.png?v=20171209.193010">
+                </div>
+
+                <div class="label-wrap">
+                    <label>
+                        <span>打包更多课程</span>
+                    </label>
+                </div>
+            </a>
+        </div>
+        <section class="ticket-gifts-wrapper" >
+            <ul class="ticket-gifts-list">
+                {foreach name="gifts" item="val" key="key"}
+                <li class="item">
+                    <a class="item-gift" :href="'/live/gifts/ticket?id='+item.id" target="_blank">
+                        <div class="cover-zone">
+                            <img src="{$val.cover_pic}" alt="" class="g-coverimg">
+                        </div>
+                        <div class="g-main">
+                            <h4 class="g-title">{$val.title}</h4>
+                            <div class="g-pro-bar">
+                                <!-- <div class="pro" style="width: 130px"></div> -->
+                                <div class="pro" style="width: {$val.be_userd_num/$val.total_num * 100}%"></div>
+                            </div>
+                            <div class="g-gifts-num clearfix">
+                                {if $val.total_num-$val.be_userd_num <= 0}
+                                    <span class="surplus" v-else>已领取完</span>
+                                {else}
+                                    <span class="surplus" >剩余<span class="num">{$val.total_num-$val.be_userd_num}</span>张</span>
+                                {/if}
+                                <span class="give fr">已赠<span class="num" >{$val.be_userd_num}</span>张</span>
+                            </div>
+                        </div>
+                    </a>
+                </li>
+                {/foreach}
+            </ul>
+            <div v-show="giftsHasMorn" class="more-loading" style="display: none;">
+                <p class="text">正在加载更多...</p>
+            </div>
+            <div v-show="!giftsHasMorn" class="not-more" v-cloak style="display: none;">
+                <p class="text">没有更多了</p>
+            </div>
+        </section>
+
+        <!--无内容时显示-->
+        {if condition="$gifts eq null"}
+            <div id="empty-content" class="lvcc-noline" style="display: block">
+                <img class="lvcc-nlimg" src="https://img.wekuo.com/res/images/live-noline.png?v=20171209.193010" alt="无记录">
+                <p class="lvcc-nltext">您还没有给好友赠送礼物</p>
+                <a class="lvcc-checkmore-btn" href="/live/home" title="立即打包精品课程">立即打包精品课程</a>
+            </div>
+        {/if}
+    </section>
+
+
+    <!-- 底部导航 -->
+    <nav id="menu-bottom-bar" class="menu-bottom-bar">
+        <a href="#" id="totop-btn" type="button" class="totop-btn"
+           style="display: none;">
+            <img src="/res/images/lv-totop.png?v=20171209.193011" alt="回到顶部" class="icon">
+        </a>
+        <ul class="menu-bar border-1px">
+            <li class="item "><a href="{:url('index/index')}" title="首页" class="nav-block"><i
+                    class="icon icon-home"></i> <span
+                    class="text">首页</span></a></li>
+            <li class="item"><a href="{:url('index/hot')}" title="热门" class="nav-block"><i
+                    class="icon icon-recommend"></i> <span
+                    class="text">热门</span></a></li>
+            <li class="item "><a href="{:url('index/mine')}" title="我的" class="nav-block"><i class="icon icon-me"></i>
+                <span class="text">我的</span></a></li>
+        </ul>
+    </nav>
+
+    <script type="text/javascript">
+        (function () {
+            var loctPathname = window.location.pathname;
+            if (('/', '/live/index', '/live/index/').indexOf(loctPathname) >= 0) {
+                loctPathname = '/live/home';
+            }
+            var winHeight = $(window).height();
+            var minSHeight = winHeight - 200;
+            var menuBottomBar = document.getElementById('menu-bottom-bar');
+            var menuList = menuBottomBar.getElementsByClassName('nav-block');
+            for (var i = menuList.length - 1; i >= 0; i--) {
+                var item = menuList[i];
+                var itemHref = item.getAttribute('href');
+                if (itemHref.indexOf(loctPathname) >= 0) {
+                    item.setAttribute('href', 'javascript:;');
+                    $(item).parent('li').addClass('active');
+                }
+            }
+            minSHeight ? minSHeight = minSHeight : minSHeight = 600;
+            $(window).on('scroll', function (e) {
+                var s = $(window).scrollTop();
+                if (s > minSHeight) {
+                    $("#totop-btn").fadeIn(100);
+                } else {
+                    $("#totop-btn").fadeOut(200);
+                }
+                ;
+            });
+            $('body').on('click', '#totop-btn', function (e) {
+                e.preventDefault();
+                $('html, body').animate({
+                    scrollTop: 0
+                }, 500)
+            })
+        })()
+    </script>
+</div>
+
+
+
+
+</body>
+</html>

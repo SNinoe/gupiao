@@ -1,0 +1,134 @@
+/*
+* @Author: Yezi
+* @Last Modified time: 2017-08-25 15:11:08
+*/
+
+/* wx */
+.feature_main .summary_content {
+	font-family: "Microsoft YaHei", 'Arial', 'Helvetica';
+	color: #595959;
+	line-height: 2;
+	letter-spacing: .5px;
+	white-space: normal;
+}
+.feature_main .summary_content strong,
+.feature_main .summary_content strong * {
+	font-weight: bold !important;
+}
+.feature_main .summary_content p {
+	line-height: 2;
+}
+.feature_main .summary_content p * {
+	line-height: 2;
+}
+.feature_main .summary_content .loading {
+	height: auto;
+	width: auto;
+	padding: 0;
+	line-height: 1;
+}
+#live-article {
+	font-size: 16px;
+	color: #595959;
+	line-height: 2;
+	letter-spacing: .5px;
+	white-space: normal;
+}
+#live-article strong,
+#live-article strong * {
+	font-weight: bold !important;
+}
+#live-article em,
+#live-article i,
+#live-article em *,
+#live-article i * {
+    font-style: italic !important;
+}
+#live-article p {
+	line-height: 2;
+	word-wrap: break-word;
+}
+#live-article p * {
+	line-height: 2;
+}
+#live-article .loading {
+	height: auto;
+	width: auto;
+	padding: 0;
+	line-height: 1;
+	background-color: transparent;
+}
+#featured-article {
+	font-size: 16px;
+	color: #595959;
+	line-height: 2;
+	letter-spacing: .5px;
+	white-space: normal;
+}
+#featured-article strong,
+#featured-article strong * {
+	font-weight: bold !important;
+}
+#featured-article em,
+#featured-article i,
+#featured-article em *,
+#featured-article i * {
+    font-style: italic !important;
+}
+#featured-article p {
+	line-height: 2;
+	word-wrap: break-word;
+}
+#featured-article p * {
+	line-height: 2;
+}
+#featured-article .loading {
+	height: auto;
+	width: auto;
+	padding: 0;
+	line-height: 1;
+	background-color: transparent;
+}
+#article-main {
+	font-size: 16px;
+	color: #595959;
+	line-height: 2;
+	letter-spacing: .5px;
+	white-space: normal;
+}
+#article-main strong,
+#article-main strong * {
+	font-weight: bold !important;
+}
+#article-content em,
+#article-content i,
+#article-content em *,
+#article-content i * {
+    font-style: italic !important;
+}
+#article-main p {
+	line-height: 2;
+}
+#article-main p * {
+	line-height: 2;
+}
+#article-main .loading {
+	height: auto;
+	width: auto;
+	padding: 0;
+	line-height: 1;
+	background-color: transparent;
+}
+
+/* pc */
+.lesson_details_inner .tab-content .line_item > .lesson_about {
+	font-family: "Microsoft YaHei", 'Arial', 'Helvetica';
+	color: #595959;
+	line-height: 2;
+	letter-spacing: .5px;
+	white-space: normal;
+}
+.lesson_details_inner .tab-content .line_item > .lesson_about img {
+	height: auto;
+	width: auto;
+}

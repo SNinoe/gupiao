@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'>
+	<!-- 添加到主屏后的标题（iOS 6 新增） -->
+	<meta name="apple-mobile-web-app-title" content="启蒙">
+	<!-- 是否启用 WebApp 全屏模式，删除苹果默认的工具栏和菜单栏 -->
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<!-- 设置苹果工具栏颜色 -->
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<!-- 添加智能 App 广告条 Smart App Banner（iOS 6+ Safari） -->
+	<meta name="apple-itunes-app" content="app-id=myAppStoreID, affiliate-data=myAffiliateData, app-argument=myURL">
+	<!-- 忽略页面中的数字识别为电话，忽略email识别 -->
+	<meta name="format-detection" content="telephone=no">
+    <title>邀请好友</title>
+
+	<link rel="stylesheet" href="/res/pltf/live/css/reset.7588.css?v=20171209.193011">
+	<link rel="stylesheet" href="/res/pltf/live/css/main.9707.css?v=20180105.110503">
+	<script src="/res/lib/jquery-3.1.0.min.js?v=20171209.193011"></script>
+	<script src="/res/lib/jquery.qrcode.min.js"></script>
+
+	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+	<!--[if lt IE 9]>
+	<script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+	<script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+	<![endif]-->
+	
+</head>
+<body>
+
+
+<div id="app" class="in-main">
+	<section class="pagehome-wrapper">
+		<div id="empty-content" class="lvcc-noline" style="display: block;text-align: center">
+			<p class="lvcc-nltext"> 长按发送二维码<br>或点击右上角发送、分享给朋友 </p>
+			<div class="weixin" id="qr_img"> </div>
+			<img id="imgOne"  src="">
+		</div>
+	</section>
+	<div class="back-center-box">
+		<a href="{:url('index/index')}" class="turn-btn" title="回到课堂">回到课堂</a>
+	</div>
+</div>
+
+<script>
+	var url= '{$url}';
+    $('#qr_img').html('');
+    var qrcode = $('#qr_img').qrcode(
+        {width: 200, height: 200, correctLevel: 0, text: url}
+    ).hide();
+    //生成图片
+    var canvas = qrcode.find('canvas').get(0);
+    $('#imgOne').attr('src', canvas.toDataURL('image/jpg'))
+
+</script>
+
+
+
+</body>
+</html>

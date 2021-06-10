@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>酷嗨竞技</title>
+
+    {include file="common/header" /}
+
+    <!-- Bootstrap Core CSS -->
+    <link href="//cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="__CDN__/assets/css/index.css" rel="stylesheet">
+
+    <!-- Plugin CSS -->
+    <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="//cdn.bootcss.com/simple-line-icons/2.4.1/css/simple-line-icons.min.css" rel="stylesheet">
+
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.0/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+
+    {include file="common/header" /}
+    {include file="common/script" /}
+</head>
+
+<body id="page-top">
+
+
+
+<header style="height: 100%">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="header-content">
+                    <div class="header-content-inner">
+                        <h1><i style="font-size: 100px" class="wx wx-xgss"></i></h1>
+                        <h3>鲜人掌 - 好食材</h3>
+                        <a href="javascript:bind()" class="btn btn-outline btn-xl page-scroll">绑定微信</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+
+
+
+<script>
+    function bind() {
+        //   是否绑定
+        $.activelogin({
+            title: '登 录',
+            text: '使用手机号绑定',
+            onOK: function (tel, ack) {
+                console.log(tel, ack);
+                $.showLoading();
+                $.post("{:url('index/auth/bind')}", {tel: tel, ack: ack}, function (res) {
+                    $.hideLoading();
+                    if (res.code == 0) {
+                        $.toast(res.msg, 'cancel');
+                    } else {
+                        $.toast(res.msg);
+                        location.href=res.url;
+                    }
+
+                });
+
+
+            },
+            onCancel: function () {
+//                $.toast('取 消!', 'cancel');
+            }
+        });
+    }
+</script>
+
+</body>
+
+</html>

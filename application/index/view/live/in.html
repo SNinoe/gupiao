@@ -1,0 +1,2066 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <!-- 添加到主屏后的标题（iOS 6 新增） -->
+    <meta name="apple-mobile-web-app-title" content="启蒙">
+    <!-- 是否启用 WebApp 全屏模式，删除苹果默认的工具栏和菜单栏 -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <!-- 设置苹果工具栏颜色 -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <!-- 添加智能 App 广告条 Smart App Banner（iOS 6+ Safari） -->
+    <meta name="apple-itunes-app" content="app-id=myAppStoreID, affiliate-data=myAffiliateData, app-argument=myURL">
+    <!-- 忽略页面中的数字识别为电话，忽略email识别 -->
+    <meta name="format-detection" content="telephone=no">
+    <title>{$info.title}</title>
+    <link rel="stylesheet" href="/res/pltf/live/css/reset.7588.css?v=20171209.193011">
+    <link rel="stylesheet" href="/res/pltf/live/css/main.9707.css?v=20180105.110503">
+    <link rel="stylesheet" href="/res/layui/css/layui.css">
+
+    <script src="/res/lib/vue.js"></script>
+    <script src="/res/lib/jquery-3.1.0.min.js?v=20171209.193011"></script>
+    <script src="/res/layui/layui.js"></script>
+    <script src="/res/layui/layer_mobile/layer.js"></script>
+    <script src="/res/lib/jquery.qrcode.min.js"></script>
+
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+
+    <style type="text/css">
+        html, body, #app { height: 100%; position: relative; } 
+        .flex-main { position: relative; }
+
+        /* 可以设置不同的进入和离开动画 */
+        /* 设置持续时间和动画函数 */
+        .slide-fade-enter-active { transition: .3s all ease; } 
+        .slide-fade-leave-active { transition: .8s all cubic-bezier(1.0, 0.5, 0.8, 1.0); } 
+        .slide-fade-enter, .slide-fade-leave-to { transform: translateY(50px); opacity: 0; }
+    </style>
+
+</head>
+<body>
+
+<script src="/res/lib/jquery.qrcode.min.js?v=20171209.193012"></script>
+
+<!-- 页面加载loading -->
+<div id="page-loading" style="display: none;">
+    <div id="loading-center">
+        <div id="loading-center-absolute">
+            <img class="loader-pic" src="/res/images/loader.gif?v=20171209.193011" alt="加载中 ...">
+            <h5 class="loader-text">启蒙微课堂</h5>
+        </div>
+    </div>
+</div>
+
+<div id="app">
+    <main class="flex-main">
+        <div class="masking"></div>
+        <div class="flex-other-bar">
+            <div class="top-live-bar">
+                <div class="left-item" style="flex: 0 0 0.9rem;">
+                    <div class="account-zone">
+                        <div class="cover-zone">
+                            <img alt="" class="cover-img" src="{$info.photo}">
+                        </div>
+                    </div>
+                </div>
+                <div class="info-item"><h1 class="i-tit">{$info.live_name}</h1>
+                    <div class="light-zone"><span>{$info.be_guanzhu}</span>人次<span class="text-primary"> • <span class="live_state">{$info.state}</span></span></div>
+                </div>
+                <div class="right-item" style="flex: 0 0 0.9rem;"
+                     onclick="$('.lr-discussion-box').show();talk_scroll_bottom();">
+                    <button type="button" class="barrage-control comment"><span class="text">讨论</span></button>
+                    <!--<button type="button" class="barrage-control danmu" style="display: none;"><span-->
+                    <!--class="text">弹幕</span></button>-->
+                    <!--<button type="button" class="barrage-control danmu-off"><span class="text">收起</span></button>-->
+                </div>
+            </div>
+        </div>
+        <!--<div class="lr-danmu-box">-->
+        <!--<dl id="rd-lastest-discuss" class="danmulist">-->
+        <!--<dd class="one-latest-discuss"><i><img-->
+        <!--src="https://img.wekuo.com/upload/user/portrait/2378148/20180126_175014?imageView2/2/w/40"></i>-->
+        <!--<p>第一次直播</p></dd>-->
+        <!--<dd class="one-latest-discuss"><i><img-->
+        <!--src="https://img.wekuo.com/upload/user/portrait/2378148/20180126_175014?imageView2/2/w/40"></i>-->
+        <!--<p>提个问题</p></dd>-->
+        <!--</dl>-->
+        <!--</div>-->
+        <div class="lr-danmu-reward">
+            <dl class="danmulist"></dl>
+        </div>
+        <div class="scrolling-main" onclick="cancel_voice();">
+            <header class="room-header">
+                <div class="room-info-wrapper clearfix">
+                    <div class="cover-zone">
+                        <img alt="" class="coverimg" src="{$info.cover_pic}">
+                    </div>
+                    <div class="info-main">
+                        <h2 class="live-name">{$info.title}</h2>
+                        <div class="live-time"><span class="text-primary">{$info.begin_time|date="m-d H:i",###}</span> 准时开始</div>
+                    </div>
+                </div> <!---->
+                <!--<div class="btns"><a href="/live/setting/teacher?live_id=1755" target="_blank" title="邀请嘉宾/联席嘉宾"-->
+                <!--class="btn btn1">邀请嘉宾/联席嘉宾</a>-->
+                <!--<button type="button" title="推送直播" class="btn btn2">推送直播</button>-->
+                <!--</div>-->
+            </header>
+
+            <!--<div class="room-mod-card"><a href="/live/sale?live_id=1755" target="_blank" class="invite-mod"><span-->
+            <!--class="sale-title">邀请朋友一起听课</span> <span class="sale-profits">赚9.9元</span></a>-->
+            <!--</div>-->
+            <div class="room-mod-card"><h4 class="rc-title">听课指南</h4>
+                <div class="rc-main">
+                    <div class="guide-zone">
+                        <p class="p1">1. 听不到声音请往下翻，点击语音即可播放，并确认手机没有静音。</p>
+                        <p class="p1">2. 遇到卡顿和加载不出，点返回，重新进入即可。</p>
+                        <p class="p1">3. 课程永久保留，可以无限回听。</p>
+                        <p class="p1">4. 成功参与后可在讨论区提问和交流。</p>
+                        <p class="p1">5. 点击上方邀请好友来听课，每成功邀请一位好友即可获得对应收入。</p>
+                        <!--<p class="p1">6. 可关注<a href="javascript:;">『启蒙』公众号</a>，接收开课提醒、回听直播。</p>-->
+                    </div>
+                </div>
+            </div>
+            <div class="live-main">
+                <!--<div class="more-loading" style="display: none;"><p class="text">滑动加载更多...</p></div>-->
+                <div id="lists">
+                    <div data-id="103313" data-num="1" data-index="0" data-type="2" class="one-content-item" v-for="(item, index) in items">
+                        <div class="lv-single" v-if="item.datatype == 'voice' " :content_id="item.data_id">
+                            <div class="single-item clearfix">
+                                <div class="avtar-zone">
+                                    <img alt="头像" class="avatar" :src="item.avatar">
+                                </div>
+                                <div class="si-wrapper">
+                                    <h4 class="siw-hd"><strong class="si-name">{{item.name}}</strong></h4>
+                                    <div class="siw-container single-voice" :style="{ width: item.awith }">
+                                        <div data-id="103313" data-num="1" class="siw-main-wrap voice-main"
+                                             onclick="player.play(this)" :type="item.type">
+                                            <div class="si-content">
+                                                <div class="">
+                                                    <div class="content-voice">
+
+                                                        <audio preload="none" :src="item.audio" :ser-duration="item.time" class="voice-audio"></audio>
+
+                                                        <!--进度条-->
+                                                        <section class="voi-control progressBar" style="display: none;">
+                                                            <div class="bar-bg"></div>
+                                                            <div class="voi-control speed voice-speed" style="width: 0%;">
+                                                                <div class="voi-control drag voice-drag">
+                                                                    <!--<div class="playTime" style="display: none;"><span-->
+                                                                    <!--class="txt-tip"><var>0</var>″</span></div>-->
+                                                                </div>
+                                                            </div>
+                                                        </section>
+
+
+                                                        <!--总时长-->
+                                                        <span class="time">{{item.time}}″</span>
+
+                                                        <!--未听-->
+                                                        <span class="not-listened" style="display: block;right: -9px"></span>
+
+                                                        <div class="voice-play-control">
+                                                            <!--开始-->
+                                                            <img src="/res/images/live-voice-start.png?v=20171209.193010" class="voice-icon voice-content-start" style="display: block">
+                                                            <!--暂停-->
+                                                            <img src="/res/images/live-voice-pause.png?v=20171209.193010" class="voice-icon voice-content-pause" style="display: none;">
+                                                            <!--加载中-->
+                                                            <img src="/res/images/live-loading.gif?v=20171209.193011" class="voice-icon voice-content-loading" style="display: none;">
+
+                                                            <img src="/res/images/playing.png" class="voice-icon voice-content-playing layui-anim layui-anim-scale layui-anim-loop" style="animation-duration: 1.3s;display: none;">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <button type="button" class="recall-btn" style="top: 8px">
+                                            <img src="/res/images/lv-ico-recall.png?v=20171209.193010" alt="撤回" onclick="player.recall(this)" :data_id="item.data_id" class="btn-iocn">
+                                        </button>
+
+                                        <button type="button" class="resend-btn" style="display: none;">
+                                            <img src="/res/images/live-resend.png?v=20171209.193011" alt="发送失败" class="btn-iocn">
+                                        </button>
+                                        <button type="button" class="reload-btn" style="display: none;">
+                                            <img src="/res/images/live-reload.png?v=20171209.193011" alt="重新加载" class="btn-iocn">
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="lv-single" v-if="item.datatype == 'text' " :content_id="item.data_id">
+                            <div class="single-item clearfix">
+                                <div class="avtar-zone">
+                                    <img alt="头像" class="avatar" :src="item.avatar">
+                                </div>
+                                <div class="si-wrapper">
+                                    <h4 class="siw-hd"><strong class="si-name">{{item.name}}</strong></h4>
+                                    <div class="siw-container single-text">
+                                        <div class="siw-main-wrap auto-width">
+                                            <div class="si-content">
+                                                <div class="content-text">{{item.content}}</div>
+                                            </div>
+                                            <button type="button" class="recall-btn" style="top: 6px;right: -30px">
+                                                <img src="/res/images/lv-ico-recall.png?v=20171209.193010" onclick="player.recall(this)" :data_id="item.data_id" alt="撤回" class="btn-iocn">
+                                            </button>
+                                            <button type="button" class="resend-btn" style="display: none;">
+                                                <img src="/res/images/live-resend.png?v=20171209.193011" alt="发送失败" class="btn-iocn">
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="lv-single" v-if="item.datatype == 'img' " :content_id="item.data_id">
+                            <div class="single-item clearfix">
+                                <div class="avtar-zone">
+                                    <img alt="头像" class="avatar" :src="item.avatar">
+                                </div>
+                                <div class="si-wrapper">
+                                    <h4 class="siw-hd"><strong class="si-name">{{item.name}}</strong></h4>
+                                    <div class="siw-container single-image">
+                                        <div class="siw-main-wrap">
+                                            <div class="si-content">
+                                                <div class="content-image">
+                                                    <div class="my-gallery" style="max-height: 600px; max-width: 200px;">
+                                                        <img class="one-content-img" :src="item.img">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <button type="button" class="recall-btn">
+                                                <img src="/res/images/lv-ico-recall.png?v=20171209.193010" onclick="player.recall(this)" :data_id="item.data_id" alt="撤回" class="btn-iocn">
+                                            </button>
+                                            <button type="button" class="resend-btn" style="display: none;">
+                                                <img src="/res/images/live-resend.png?v=20171209.193011" alt="发送失败" class="btn-iocn">
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <script>
+
+                    var player = {
+                        that: '',
+                        play: function (that) {
+
+                            if (!wx.isInit) {
+                                alert('音箱师就位中...')
+                                return false;
+                            }
+
+                            record.stop();
+                            player.that = that;
+                            console.log(that);
+                            var type = $(that).attr('type');
+                            if (type == 1) {
+                                var audio = $(that).find('.voice-audio')[0];
+                                audio.play();
+                                player.speed2(that);
+//                                var time = setInterval(function () {
+//                                    var w = player.speed(that);
+//                                    if (w == 1) {
+//                                        clearInterval(time);
+//                                        $(that).find('.progressBar').hide();
+//                                        $(that).find('.not-listened').hide();
+//
+//                                        $(that).find('.voice-icon').hide();
+//                                        $(that).find('.voice-content-start').show();
+//
+//                                    }
+//                                }, 50);
+
+                            } else if (type == 2) {
+
+                                var voice_id = $(that).find('.voice-audio').attr('src');
+
+
+                                wx.downloadVoice({
+                                    serverId: voice_id,
+                                    success: function (res) {
+                                        console.log('下载语音成功，localId 为' + res.localId);
+//                                        voice.localId = res.localId;
+                                        wx.playVoice({
+                                            localId: res.localId
+                                        });
+                                        player.speed2(that);
+                                    }
+                                });
+
+
+                            }
+
+
+                        },
+                        pause: function () {
+
+                        },
+                        stop: function () {
+
+                            var that = player.that;
+
+                            var localId = $(that).find('.voice-audio').attr('src');
+                            wx.stopVoice({
+                                localId: localId
+                            });
+
+                            $(that).find('.not-listened').hide();
+
+                            $(that).find('.voice-icon').hide();
+                            $(that).find('.voice-content-start').show();
+
+
+                        },
+                        speed: function (that) {
+
+                            $(that).find('.progressBar').show();
+
+                            $(that).find('.voice-icon').hide();
+                            $(that).find('.voice-content-pause').show();
+                            var audio = $(that).find('.voice-audio')[0];
+                            var duration = $(audio).attr('ser-duration');
+                            var widthRadio = 1;
+                            try {
+                                widthRadio = Math.min(audio.currentTime / duration, 1);
+                            } catch (err) {
+                                console.log('widthRadio, err:', err);
+                            }
+
+
+                            if (widthRadio != 0) {
+                                $(that).find('.voice-speed')[0].style.width = widthRadio * 100 + "%";
+                            }
+                            return widthRadio;
+
+                        },
+                        speed2: function (that) {
+
+//                            $(that).find('.progressBar').show();
+                            $(that).find('.voice-icon').hide();
+                            $(that).find('.voice-content-playing').show();
+                            var audio = $(that).find('.voice-audio')[0];
+                            var duration = $(audio).attr('ser-duration');
+                            console.log(duration * 1000);
+                            setTimeout(function () {
+                                $(that).find('.not-listened').hide();
+
+                                $(that).find('.voice-icon').hide();
+                                $(that).find('.voice-content-start').show();
+                            }, duration * 1000)
+
+
+                        },
+                        push_li: function (li) {
+                            lists.items.push(li);
+                            setTimeout(function () {
+                                scroll_bottom();
+                            }, 1000)
+                        },
+                        //撤回
+                        recall: function (that) {
+
+                            var data_id = $(that).attr('data_id');
+                            console.log(data_id);
+
+                            layer.open({
+                                content: '确定要撤回?'
+                                , btn: ['是的', '取消']
+                                , yes: function (index) {
+                                    layer.close(index);
+                                    socket_send({type: 'recall', data_id: data_id,live_id:'{$info.id}'});
+                                }
+                            });
+
+
+                        }
+
+
+                    };
+
+
+                    var lists = new Vue({
+                        el: '#lists',
+                        data: {
+                            items:[],
+//                            items: [
+//                                {
+//                                    name: '胡大官人',
+//                                    time: 14,
+//                                    content:false,
+//                                    img: false,
+//                                    type: 1,
+//                                    datatype: 'voice',
+//                                    data_id: 1,
+//                                    awith: '100%',
+//                                    audio: 'http://alcdn.wekuo.com/live-sys/system_start.mp3',
+//                                    avatar: 'https://img.wekuo.com/upload/user/portrait/2378148/20180126_175014?imageView2/2/w/80',
+//
+//                                },
+//                                {
+//                                    name: '胡大官人 | 主持人',
+//                                    content: '现练习一下现练习一下现练习一下现练习一下现练习一下现练习一下现练习一下现练习一下',
+//                                    img: false,
+//                                    time: false,
+//                                    type: 1,
+//                                    datatype: 'text',
+//                                    data_id: 2,
+//                                    awith: false,
+//                                    audio: false,
+//                                    avatar: 'https://img.wekuo.com/upload/user/portrait/2378148/20180126_175014?imageView2/2/w/80',
+//
+//                                },
+//                                {
+//                                    name: '胡大官人 | 关注二维码后测试',
+//                                    content:false,
+//                                    img: '/res/images/test_qr.jpg',
+//                                    time: false,
+//                                    type: 1,
+//                                    datatype: 'img',
+//                                    data_id: 3,
+//                                    awith: false,
+//                                    audio: false,
+//                                    avatar: 'https://img.wekuo.com/upload/user/portrait/2378148/20180126_175014?imageView2/2/w/80',
+//
+//                                }
+//
+//                            ],
+                        }
+                    });
+
+                    //消息
+                    $(function () {
+                        $.get("{:url('live/get_live_content')}",{id:'{$info.id}'},function (res) {
+                            console.log(res.data);
+                            if(res.code==1){
+                                lists.items=res.data;
+                            }
+                        });
+                    });
+
+
+                </script>
+
+
+                <div data-id="103370" style="display: none" data-num="3" data-index="2" data-type="1"
+                     class="one-content-item">
+                    <div class="lv-single">
+                        <div class="single-item clearfix">
+                            <div class="avtar-zone">
+                                <img alt="头像" class="avatar" src="https://img.wekuo.com/upload/user/portrait/2378148/20180126_175014?imageView2/2/w/80">
+                            </div>
+                            <div class="si-wrapper">
+                                <h4 class="siw-hd"><strong class="si-name">胡大官人 | 主持人</strong></h4>
+                                <div class="siw-container reply-text">
+                                    <div class="siw-main-wrap auto-width">
+                                        <div class="si-content">
+                                            <div class="content-ask">
+                                                <p class="text-zone content-text">
+                                                    <span class="name"></span>：
+                                                    <span class="text">提个问题</span>
+                                                </p> <!---->
+                                            </div>
+                                            <div class="content-reply">
+                                                <div class="content-text">你说吧</div>
+                                            </div>
+                                        </div>
+                                        <button type="button" class="recall-btn">
+                                            <img src="/res/images/lv-ico-recall.png?v=20171209.193010" alt="撤回" class="btn-iocn">
+                                        </button>
+                                        <button type="button" class="resend-btn" style="display: none;">
+                                            <img src="/res/images/live-resend.png?v=20171209.193011" alt="发送失败" class="btn-iocn">
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <section class="room-footer-bar">
+            <div class="lr-newmesTip"><a href="javascript:;" class="lr-newmes-btn">0</a></div>
+            <div class="lr-goPlay"><a href="javascript:;" class="lr-goplay-btn">回到播放位置</a></div>
+            <!--<button title="打赏" class="show-rereward-btn"><span class="text">赏</span></button>-->
+            <div class="right-operat-zone">
+                <ul class="right-btns ">
+                    <li class="item" style="display: block;">
+                        <button type="button" onclick="scroll_top()" class="r-btn">
+                            <img src="/res/images/lv-r-to-top.png?v=20171209.193010" alt="" class="o-icon">
+                        </button>
+                    </li>
+                    <li class="item" style="display: block;">
+                        <button type="button" onclick="scroll_bottom()" class="r-btn">
+                            <img src="/res/images/lv-r-to-bottom.png?v=20171209.193009" alt="" class="o-icon">
+                        </button>
+                    </li>
+                </ul>
+            </div>
+            <div>
+                <nav class="nav">
+                    <ul class="tool-bar">
+                        <li class="tl-item">
+                            <button type="button" class="tl-voice">
+                                <img src="/res/images/lv-bar-voice.png?v=20171209.193010" onclick="voice();" alt="语音" class="icon icon-voice">
+                                <img src="/res/images/lv-bar-keyboard.png?v=20171209.193011" onclick="voice();" alt="文字" class="icon icon-text" style="display: none">
+                            </button>
+                        </li>
+                        <li class="tl-item tl-inputbox">
+                            <textarea id="content-text-area" name="" rows="1" onclick="cancel_voice();" placeholder="点击这里输入文字" class="input-box"></textarea>
+                        </li>
+                        <li class="tl-item">
+                            <button type="button" class="tl-image" onclick="record.choose_img()">
+                                <img src="/res/images/lv-bar-image.png?v=20171209.193011" alt="图片" class="icon icon-image">
+                            </button>
+                        </li>
+                        <li class="tl-item" onclick="$('.controller-container').toggle();$('#record-controller-bar').hide();">
+                            <button type="button" class="tl-control">
+                                <img src="/res/images/lv-bar-control.png?v=20171209.193010" alt="功能" class="icon icon-control">
+                            </button>
+                        </li>
+                        <li class="tl-item">
+                            <button type="button" class="tl-send-btn" onclick="record.send_text()" style="display: none;">发送 </button>
+                        </li>
+                    </ul>
+                </nav>
+                <script>
+                    function voice() {
+                        $('#record-controller-bar').toggle();
+                        $('.icon-voice').toggle();
+                        $('.icon-text').toggle();
+                        $('.controller-container').hide();
+                        scroll_bottom();
+                    }
+                    function cancel_voice() {
+                        $('#record-controller-bar').hide();
+                        $('.icon-voice').show();
+                        $('.icon-text').hide();
+                        $('.controller-container').hide();
+
+                        $('.recording-ani').hide();
+                        $('.layui-an1').show();
+
+                        $('.btn-recording').hide();
+                        $('.start-rec').show();
+
+                        $('.types-wrap').show();
+                        $('.text-ing1').show();
+                        $('.text-ing2').hide();
+
+                    }
+                    function chet_text() {
+                        var text = $('#content-text-area').val();
+                        if (text) {
+                            $('.tl-image').hide();
+                            $('.tl-control').hide();
+                            $('.tl-send-btn').show();
+                        } else {
+                            $('.tl-image').show();
+                            $('.tl-control').show();
+                            $('.tl-send-btn').hide();
+                        }
+                    }
+
+                    $('#content-text-area').keyup(function () {
+                        chet_text();
+                    }).blur(
+                        function () {
+                            chet_text();
+                        }
+                    ).focus(
+                        function () {
+                            chet_text();
+                        }
+                    );
+
+
+                </script>
+                <div class="tool-bar-bottom control-zooe record-ctrl">
+                    <div id="record-controller-bar" class="record-controller-zooe clearfix changeType"
+                         style="display: none;">
+                        <!--<dl class="recording_longtap">-->
+                        <!--<dd class="recording-txttip">按住语音按钮说话</dd>-->
+                        <!--<dd class="btn-dd"><i class="recording-ani"></i>-->
+                        <!--<div class="btn-recording start_rec press-record-btn"></div>-->
+                        <!--</dd>-->
+                        <!--<dd class="type-dd">-->
+                        <!--<div class="types-wrap"><span class="text on">长按</span> <span class="text slide right">单击</span>-->
+                        <!--</div>-->
+                        <!--</dd>-->
+                        <!--&lt;!&ndash;<dd class="changetype-btn"></dd>&ndash;&gt;-->
+                        <!--</dl>-->
+                        <dl class="recording_click">
+                            <dd class="recording-txttip">
+                                点击语音按钮开始录音，再次点击结束录音
+                            </dd> <!---->
+                            <dd class="btn-dd">
+                                <i class="recording-ani layui-an1"></i>
+
+                                <i class="recording-ani layui-an2 layui-anim layui-anim-scale layui-anim-loop"
+                                   style="animation-duration: 1.3s;display: none">
+                                </i>
+                                <!--//开始录音-->
+                                <div class="btn-recording start-rec click-record-begin" onclick="record.start();"
+                                     style="display: block"></div>
+
+                                <!--结束录音-->
+                                <div class="btn-recording stop_rec click-record-stop " onclick="record.stop();"
+                                     style="display: none;"></div>
+
+                                <!--完成-->
+                                <div id="send-click-btn" class="btn-recording send_rec click-record-send"
+                                     onclick="record.send_voice()"
+                                     style="display: none;">发送
+                                </div>
+                            </dd>
+                            <dd class="type-dd">
+                                <div class="types-wrap">
+                                    <!--<span class="text slide left">长按</span>-->
+                                    <span class="text on text-ing1">单击</span>
+                                    <span class="text on text-ing2" style="display: none">正在录音中</span>
+                                </div>
+                            </dd>
+                            <!--<dd class="changetype-btn"></dd>-->
+                            <!--完成-->
+                            <dd class="cancel-rec-btn click-record-cancel" style="display: none;">
+                                <a href="javascript:;" onclick="record.cancel()" class="cancel-btn">取消</a>
+                            </dd>
+                        </dl>
+                        <!--<div id="rec-tips-bar"></div>-->
+                    </div>
+
+                    <!--<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>-->
+                    <script src="https://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+                    <script>
+                        wx.config({
+                            debug: false,
+                            appId: '{$jsconfig.appId}',
+                            timestamp: '{$jsconfig.timestamp}',
+                            nonceStr: '{$jsconfig.noncestr}',
+                            signature: '{$jsconfig.signature}',
+                            jsApiList: [
+                                'checkJsApi',
+                                'onMenuShareTimeline',
+                                'onMenuShareAppMessage',
+                                'onMenuShareQQ',
+                                'onMenuShareWeibo',
+                                'hideMenuItems',
+                                'showMenuItems',
+                                'hideAllNonBaseMenuItem',
+                                'showAllNonBaseMenuItem',
+                                'translateVoice',
+                                'startRecord',
+                                'stopRecord',
+                                'onRecordEnd',
+                                'playVoice',
+                                'pauseVoice',
+                                'stopVoice',
+                                'uploadVoice',
+                                'downloadVoice',
+                                'chooseImage',
+                                'previewImage',
+                                'uploadImage',
+                                'downloadImage',
+                                'getNetworkType',
+                                'openLocation',
+                                'getLocation',
+                                'hideOptionMenu',
+                                'showOptionMenu',
+                                'closeWindow',
+                                'scanQRCode',
+                                'chooseWXPay',
+                                'openProductSpecificView',
+                                'addCard',
+                                'chooseCard',
+                                'openCard'
+                            ]
+                        });
+                        wx.isInit = false;
+                    </script>
+                    <script>
+                        wx.ready(function () {
+
+                            wx.isInit = true;
+                            // 3 智能接口
+                            var voice = {
+                                localId: 'http://alcdn.wekuo.com/live-sys/system_start.mp3',
+                                serverId: ''
+                            };
+
+                            // 4.4 监听录音自动停止
+                            wx.onVoiceRecordEnd({
+                                complete: function (res) {
+                                    voice.localId = res.localId;
+                                    alert('录音时间已超过一分钟');
+                                }
+                            });
+
+
+
+                            // 4.8 监听录音播放停止
+                            wx.onVoicePlayEnd({
+                                complete: function (res) {
+                                    console.log('录音（' + res.localId + '）播放结束');
+                                }
+                            });
+
+
+
+                            // 5 图片接口
+                            // 5.1 拍照、本地选图
+                            var images = {
+                                localId: [],
+                                serverId: []
+                            };
+
+
+                        });
+
+                        wx.error(function (res) {
+                            console.log(res.errMsg);
+                        });
+                    </script>
+
+
+                    <script>
+
+
+                        var ws_url = 'ws://' + document.domain + ':8383';
+                        var socket = new WebSocket(ws_url);
+                        socket.onopen = function () {
+
+                        }
+                        socket.onmessage = function (e) {
+                            var msg = JSON.parse(e.data);
+                            if (!msg.type) return;
+
+
+                            switch (msg.type) {
+
+
+                                case 'init':
+
+                                    var content={
+                                        token:'{$user.openid}',live_id:'{$info.id}'
+                                    }
+                                    socket_send({type:'auth',content:content});
+
+                                    return;
+
+                                case 'text':
+
+                                    var li = msg.content;
+//                                    lists.items.push(li);
+                                    player.push_li(li)
+                                    $('#content-text-area').val('');
+                                    chet_text();
+
+                                    return;
+
+                                case 'voice':
+
+                                    var li = msg.content;
+//                                    lists.items.push(li);
+                                    player.push_li(li)
+
+                                    $('.recording-ani').hide();
+                                    $('.layui-an1').show();
+
+                                    $('.btn-recording').hide();
+                                    $('.start-rec').show();
+
+                                    $('.types-wrap').show();
+                                    $('.text-ing1').show();
+                                    $('.text-ing2').hide();
+
+                                    return;
+
+                                case 'img':
+                                    var li = msg.content;
+
+                                    console.log(li);
+//                                    lists.items.push(li);
+                                    player.push_li(li)
+                                    return;
+
+
+                                case 'talk':
+
+                                    var li = msg.content;
+//                                    lists.items.push(li);
+                                    talk.items.push(li);
+                                    $('#discuss-text-area').val('');
+                                    talk_scroll_bottom();
+
+                                    return;
+
+
+                                case 'talk_del':
+                                    var data_id = msg.data_id;
+                                    $("li[data_id='" + data_id + "']").remove();
+
+                                    return;
+
+                                case 'recall':
+                                    var data_id = msg.data_id;
+                                    $("div[content_id='" + data_id + "']").remove();
+
+                                    return;
+
+                                case 'live_over':
+
+                                    // location.reload();
+                                    $('.live_over').hide();
+                                    $('.live_state').html("已结束");
+
+                                    layer.open({
+                                        content: msg.content
+                                        , btn: '确定'
+                                    });
+
+                                    return;
+
+
+                            }
+
+
+                        }
+                        socket.onclose = function () {
+                            console.log('服务关闭');
+                        }
+
+                        socket.onerror = function () {
+                            console.log('服务异常');
+                        }
+
+                        var images = {
+                            localId: [],
+                            serverId: []
+                        };
+
+                        //发送socket消息
+                        function socket_send(obj) {
+                            socket.send(JSON.stringify(obj));
+                        }
+
+                        var content_id=1000;
+                        var record = {
+
+                            start_time: 0,
+                            end_time: 0,
+
+                            start: function () {
+
+                                if (!wx.isInit) {
+                                    alert('音箱师就位中...')
+                                    return false;
+                                }
+
+                                player.stop();
+
+                                $('.recording-ani').hide();
+                                $('.layui-an2').show();
+
+                                $('.btn-recording').hide();
+                                $('.stop_rec').show();
+
+                                $('.text-ing1').hide();
+                                $('.text-ing2').show();
+
+                                wx.startRecord({
+                                    cancel: function () {
+                                        alert('用户拒绝授权录音');
+                                    }
+                                });
+                                record.start_time = new Date().getTime();
+
+                            },
+                            stop: function () {
+                                $('.btn-recording').hide();
+                                $('#send-click-btn').show();
+                                $('.send_rec').show();
+
+                                $('.types-wrap').hide();
+                                $('.click-record-cancel').show();
+
+                                wx.stopRecord({
+                                    success: function (res) {
+                                        voice.localId = res.localId;
+                                    },
+                                    fail: function (res) {
+                                        console.log(JSON.stringify(res));
+                                    }
+                                });
+                                record.end_time = new Date().getTime();
+                            },
+                            cancel: function () {
+                                wx.stopRecord({
+                                    success: function (res) {
+                                        voice.localId = res.localId;
+                                    },
+                                    fail: function (res) {
+                                        console.log(JSON.stringify(res));
+                                    }
+                                });
+                                cancel_voice();
+                            },
+                            send_voice: function () {
+
+                                var diff_time = (record.end_time - record.start_time) / 1000;
+                                diff_time = Math.round(diff_time);
+                                var awith = '40%';
+                                console.log(diff_time);
+                                if (diff_time < 10 && diff_time > 3) {
+                                    awith = diff_time * 10 + '%';
+                                } else if (diff_time < 4) {
+                                    awith = '40%';
+                                } else {
+                                    awith = '100%';
+                                }
+
+                                content_id=content_id+1;
+                                wx.uploadVoice({
+                                    localId: voice.localId,
+                                    success: function (res) {
+                                        console.log(res);
+//                                    alert('上传语音成功，serverId 为' + res.serverId);
+                                        voice.serverId = res.serverId;
+                                        var li = {
+                                            name: '{$user.nickname}',
+                                            uid: '{$user.id}',
+                                            live_id: '{$info.id}',
+                                            time: diff_time,
+                                            type: 2,
+                                            datatype: 'voice',
+                                            data_id: 0,
+                                            awith: awith,
+//                                            audio: voice.localId,
+                                            audio: res.serverId,
+                                            avatar: '{$user.photo}',
+
+                                        }
+
+                                        socket_send({type: 'voice', content: li});
+
+
+//                                        lists.items.push(li);
+//
+//                                        $('.recording-ani').hide();
+//                                        $('.layui-an1').show();
+//
+//                                        $('.btn-recording').hide();
+//                                        $('.start-rec').show();
+//
+//                                        $('.types-wrap').show();
+//                                        $('.text-ing1').show();
+//                                        $('.text-ing2').hide();
+//                                        scroll_bottom();
+//                                        setTimeout(function () {
+//                                            scroll_bottom();
+//                                        }, 2000)
+
+
+                                    }
+                                });
+                            },
+                            send_img: function (img_id) {
+
+                                var li = {
+                                    name: '{$user.nickname}',
+                                    uid: '{$user.id}',
+                                    live_id: '{$info.id}',
+                                    img: img_id,
+                                    time: false,
+                                    type: 1,
+                                    datatype: 'img',
+                                    data_id: 0,
+                                    awith: false,
+                                    audio: false,
+                                    avatar: '{$user.photo}',
+
+                                }
+                                socket_send({type: 'img', content: li})
+//                                lists.items.push(li);
+//                                scroll_bottom();
+//                                setTimeout(function () {
+//                                    scroll_bottom();
+//                                }, 2000)
+
+
+                            },
+                            send_text: function (that) {
+                                var content = $('#content-text-area').val();
+                                if (!content) {
+                                    return false;
+                                }
+
+                                var li = {
+                                    name: '{$user.nickname}',
+                                    uid: '{$user.id}',
+                                    live_id: '{$info.id}',
+                                    content: content,
+                                    time: false,
+                                    type: 1,
+                                    datatype: 'text',
+                                    data_id: 0,
+                                    awith: false,
+                                    audio: false,
+                                    avatar: '{$user.photo}',
+
+                                }
+                                socket_send({type: 'text', content: li});
+
+//                                lists.items.push(li);
+//                                $('#content-text-area').val('');
+//                                scroll_bottom();
+//                                setTimeout(function () {
+//                                    scroll_bottom();
+//                                }, 2000)
+//                                chet_text();
+                            },
+                            choose_img: function () {
+
+                                if (!wx.isInit) {
+                                    alert('音箱师就位中...')
+                                    return false;
+                                }
+
+                                wx.chooseImage({
+                                    success: function (res) {
+                                        images.localId = res.localIds;
+                                        console.log('已选择 ' + res.localIds.length + ' 张图片');
+                                        var i = 0, length = images.localId.length;
+                                        images.serverId = [];
+                                        function upload() {
+                                            wx.uploadImage({
+                                                localId: images.localId[i],
+                                                success: function (res) {
+
+                                                    i++;
+                                                    console.log('已上传：' + i + '/' + length);
+                                                    //单个上传完成时
+                                                    record.send_img(res.serverId);
+
+                                                    images.serverId.push(res.serverId);
+                                                    if (i < length) {
+                                                        upload();
+                                                    } else {
+                                                        //全部上传完成时
+
+
+                                                    }
+                                                },
+                                                fail: function (res) {
+                                                    alert(JSON.stringify(res));
+                                                }
+                                            });
+                                        }
+
+                                        upload();
+
+                                    }
+                                });
+                            },
+
+
+                        }
+
+
+                        var ctrl = {
+
+                            //禁言
+                            shutup: function () {
+                                layer.open({
+                                    content: '确定要禁言？'
+                                    , btn: ['是的', '取消']
+                                    , yes: function (index) {
+                                        layer.close(index);
+                                        layer.open({type: 2});
+                                        setTimeout(function () {
+                                            layer.closeAll();
+                                            layer.open({
+                                                content: '操作完成'
+                                                , btn: '确定'
+                                            });
+                                        }, 2000)
+
+
+                                    }
+                                });
+                            },
+                            //邀请
+                            invite: function () {
+                                location.href = "{:url('live/invite')}";
+                            },
+                            //赠送
+                            give: function () {
+                                $('.packGiftDia').fadeIn(300);
+                            },
+                            //链接
+                            link: function () {
+                                $('.urlshow-dialog').fadeIn(300);
+                            },
+                            //结束直播
+                            live_over: function () {
+                                layer.open({
+                                    content: '确定要结束直播？'
+                                    , btn: ['是的', '取消']
+                                    , yes: function (index) {
+                                        layer.close(index);
+                                        socket_send({type:'live_over',room_id:"{$info.id}"});
+                                                
+                                    }
+                                });
+                            },
+                            //打赏
+                            dashang: function () {
+//                                layer.open({
+//                                    content: '此处需要跳转链接'
+//                                    , btn: '确定'
+//                                });
+                                location.href = "{:url('live/reward')}?id={$info.id}";
+                            },
+                            //生成二维码
+                            qr: function (url) {
+                                $('#qr_img').html('');
+                                var qrcode = $('#qr_img').qrcode(
+                                    {width: 200, height: 200, correctLevel: 0, text: url}
+                                ).hide();
+                                //生成图片
+                                var canvas = qrcode.find('canvas').get(0);
+                                $('#imgOne').attr('src', canvas.toDataURL('image/jpg'))
+
+
+                                $('#qr_dialog').fadeIn();
+
+                            }
+
+
+                        }
+
+
+                        function scroll_top() {
+                            $('.scrolling-main').animate({scrollTop: $('.flex-main').offset().top}, 300);
+                        }
+                        var h2=$('.one-content-item').length*500;
+                        function scroll_bottom() {
+                            h2 = h2 + 500;
+                            $('.scrolling-main').animate({scrollTop: $('.room-footer-bar').offset().top+$('#lists').height() + h2}, 300);
+                        }
+                        var h=$('.one-discuss-item').length*101;
+                        function talk_scroll_bottom() {
+                            h = h + 101;
+                            setTimeout(function () {
+                                $('#discuss-room').animate({scrollTop: $('.talk-footer-bar').offset().top + $('#discuss-room').height() + h}, 100);
+                            }, 300)
+
+                        }
+
+
+                    </script>
+
+                    <div class="controller-container clearfix" style="display: none">
+                        <!--<ol class="control-hd">-->
+                        <!--<li class="on">1</li>-->
+                        <!--<li class="">2</li>-->
+                        <!--</ol>-->
+                        <div class="control-bd">
+                            <ul class="control-tool-list">
+                                <li class="item" onclick="record.choose_img()">
+                                    <img src="/res/images/tool-upload-image.png?v=20171209.193010" alt="" class="icon"> 
+                                    <span class="text">发送图片</span>
+                                </li>
+                                <!--<li class="item"><img-->
+                                <!--src="/res/images/tool-to-voicelib.png?v=20171209.193010"-->
+                                <!--alt="" class="icon"> <span class="text">语音素材</span></li>-->
+                                <!--<li class="item">-->
+                                <!--<div><img-->
+                                <!--src="/res/images/tool-to-detail.png?v=20171209.193010"-->
+                                <!--alt="" class="icon"> <span class="text">直播详情</span></div>-->
+                                <!--</li>-->
+
+                                <li class="item" onclick="ctrl.shutup()">
+                                    <div>
+                                        <img src="/res/images/tool-shutup.png?v=20171209.193010" alt="" class="icon"> 
+                                        <span class="text">禁言</span>
+                                    </div>
+                                </li>
+
+                                <li class="item" onclick="ctrl.invite()">
+                                    <img src="/res/images/tool-invite.png?v=20171209.193010" alt="" class="icon"> 
+                                    <span class="text">邀请好友</span>
+                                </li>
+
+                                <li class="item" onclick="ctrl.give()">
+                                    <div>
+                                        <img src="/res/images/tool-gifts.png?v=20171209.193009" alt="" class="icon"> 
+                                        <span class="text">赠送好友</span>
+                                    </div>
+                                </li>
+
+                                <li class="item" onclick="ctrl.link()">
+                                    <div>
+                                        <img src="/res/images/tool-check-link.png?v=20171209.193011" alt="" class="icon"> 
+                                        <span class="text">查看链接</span>
+                                    </div>
+                                </li>
+                                
+                                {if $info.state != "已结束"}
+                                <li class="item live_over" onclick="ctrl.live_over()">
+                                    <div>
+                                        <img src="/res/images/tool-o-end.png?v=20171209.193011" alt="" class="icon"> 
+                                        <span class="text">结束直播</span>
+                                    </div>
+                                </li>
+                                {/if}
+
+                                <li class="item" onclick="ctrl.dashang()">
+                                    <img src="/res/images/tool-reward.png?v=20171209.193010" alt="" class="icon"> 
+                                    <span class="text">打赏记录</span>
+                                </li>
+
+                                <!--<li class="item"><img-->
+                                <!--src="/res/images/tool-handle.png?v=20171209.193010" alt=""-->
+                                <!--class="icon"> <span class="text">操作</span></li>-->
+                            </ul>
+                        </div>
+                        <!--<div class="control-bd">-->
+                        <!--<ul class="control-tool-list">-->
+                        <!--<li class="item">-->
+                        <!--<div><img src="/res/images/tool-o-end.png?v=20171209.193011"-->
+                        <!--alt="" class="icon"> <span class="text">结束直播</span></div>-->
+                        <!--</li>-->
+                        <!--<li class="item"><img-->
+                        <!--src="/res/images/tool-reward.png?v=20171209.193010" alt=""-->
+                        <!--class="icon"> <span class="text">打赏记录</span></li>-->
+                        <!--<li class="item"><img-->
+                        <!--src="/res/images/tool-to-home.png?v=20171209.193011" alt=""-->
+                        <!--class="icon"> <span class="text">更多直播</span></li> &lt;!&ndash;&ndash;&gt;</ul>-->
+                        <!--</div>-->
+                    </div>
+                </div>
+            </div> <!---->
+
+        </section>
+
+        <div id="scr_bottom" style="height: 1px;position: fixed;bottom: 0px"></div>
+
+
+        <!--查看链接-->
+        <div class="urlshow-dialog" style="display: none;">
+            <div class="center-wrapper">
+                <div class="center-main">
+                    <div class="dialog-content"><h4 class="title">查看链接</h4>
+                        <div class="textarea-zone">
+                            <div class="textarea-label">详情页面：</div>
+                            <button type="button" onclick="ctrl.qr('aaaaa')" class="right-btn">链接二维码</button>
+                            <p class="textarea-control">https://live.wekuo.com/lv/dt/1755</p>
+                        </div>
+
+                        <div class="textarea-zone">
+                            <div class="textarea-label">播放页面：</div>
+                            <button type="button" onclick="ctrl.qr('bbbbb')" class="right-btn">链接二维码</button>
+                            <p class="textarea-control">https://live.wekuo.com/lv/p/1755</p>
+                        </div>
+                    </div>
+                    <div class="dialog-footer">
+                        <a href="javascript:;" onclick="$('.urlshow-dialog').hide();" class="dialog-confirm-btn dialog-btn confirm">我知道了</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </main>
+
+    <!--讨论组-->
+    <section class="lr-discussion-box" id="msg_bos" style="display: none;">
+        <div class="bg-close" onclick="$('.lr-discussion-box').hide()"></div>
+        <div class="lrcm-body">
+            <div class="body-top-bar"><h5 class="bar-title">
+                讨论<span>({{ counter }})</span></h5>
+                <button type="button" class="backBtn" onclick="$('.lr-discussion-box').hide()"><img
+                        src="/res/images/icon-arr-bottom.png?v=20171209.193011" alt=""
+                        class="icon"></button>
+            </div>
+            <div id="discuss-room" class="lrcmb-verticalMain">
+                <ul id="rd-discuss" class="lrcmb-vm-list" v-for="(item, index) in items">
+                    <!--<li class="click-more-item">-->
+                    <!--<div id="temp-img-container" class="commenter-main">&lt;!&ndash;&ndash;&gt;</div>-->
+                    <!--</li>-->
+
+                    <li :data_id="item.data_id"
+                        class="clearfix one-discuss-item">
+                        <img alt="" class="commenter-portrait"
+                             :src="item.avatar">
+                        <div class="commenter-main">
+                            <h6 class="cmter-nickname">
+                                <span>{{item.name}}</span>
+                            </h6>
+                            <div><p class="cmter-content">{{item.content}}</p></div>
+                            <div class="cmter-data">
+                                <span class="time"> {{item.time}}</span>
+                                <span v-if="item.type == 2 " class="layui-btn  layui-btn-normal layui-btn-xs">主播</span>
+                                <div class="admin-operat clearfix">
+                                    <a href="javascript:;" class="cmter-del-btn del-discuss-btn" :data_id="item.data_id"
+                                       :content="item.content" onclick="del_msg(this)">删除</a>
+                                    <a href="javascript:;" onclick="jinyan(this)" :data_uid="item.data_uid"
+                                       v-if="item.type == 1 && item.jinyan==0"
+                                       class="cmter-del-btn forbid-speak-btn">禁言</a>
+                                    <a href="javascript:;" onclick="jinyan(this)" :data_uid="item.data_uid"
+                                       v-if="item.type == 1 && item.jinyan==1"
+                                       class="cmter-del-btn forbid-speak-btn">取消禁言</a>
+                                    <!-- <a class="cmter-reply-btn" :avatar="item.avatar" :name="item.name" :content="item.content" onclick="reply(this)">回复</a> -->
+                            </div>
+                            </div>
+                        </div>
+                    </li>
+
+
+                </ul>
+            </div>
+
+
+            <!-- <div data-id="" class="dialog gusReply-dialog" style="display: none">
+                <div class="dialog-bg" onclick="$('.gusReply-dialog').hide();"></div>
+                <div class="dialog-bottomMain">
+                    <div class="reply-content-zone">
+                        <ul class="lrcmb-vm-list">
+                            <li class="clearfix one-discuss-item">
+                                <img alt="" class="commenter-portrait" :src="avatar">
+                                <div class="commenter-main">
+                                    <h6 class="cmter-nickname"><span>{{name}}</span></h6>
+                                    <div><p class="cmter-content">{{content}}</p></div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="room-footer-bar ">
+                        <nav class="nav">
+                            <ul class="tool-bar">
+                                <li class="tl-item">
+                                <button type="button" class="tl-voice"><img
+                                src="https://img.wekuo.com/res/images/lv-bar-voice.png?v=20171209.193010"
+                                alt="语音" class="icon icon-voice"></button>
+                                </li>
+                                <li class="tl-item tl-inputbox">
+                                    <textarea id="reply-discuss-input" name="" rows="1"
+                                              placeholder="回复内容"
+                                              class="input-box"></textarea>
+                                </li>
+                                <li class="tl-item" style="display: block;">
+                                    <button type="button" class="tl-send-btn">发送</button>
+                                </li>
+                            </ul>
+                        </nav>
+                        <div class="tool-bar-bottom control-zooe">
+                        <div  class="record-controller-zooe clearfix changeType ready"
+                        style="display: none;">
+                        <dl class="recording_longtap">
+                        <dd class="recording-txttip">按住语音按钮说话</dd>
+                        <dd class="btn-dd"><i class="recording-ani"></i>
+                        <div class="btn-recording start_rec press-record-btn"></div>
+                        </dd>
+                        <dd class="type-dd">
+                        <div class="types-wrap"><span class="text on">长按</span> <span
+                        class="text slide right">单击</span></div>
+                        </dd>
+                        <dd class="changetype-btn"></dd>
+                        </dl>
+                        <dl class="recording_click">
+                        <dd class="recording-txttip">
+                        点击语音按钮开始录音，再次点击结束录音
+                        </dd> &lt;!&ndash;&ndash;&gt;
+                        <dd class="btn-dd"><i class="recording-ani"></i>
+                        <div class="btn-recording start-rec click-record-begin"></div>
+                        <div class="btn-recording stop_rec click-record-stop"
+                        style="display: none;"></div>
+                        <div  class="btn-recording send_rec click-record-send"
+                        style="display: none;">
+                        发送
+                        </div>
+                        </dd>
+                        <dd class="type-dd">
+                        <div class="types-wrap"><span class="text slide left">长按</span> <span
+                        class="text on">单击</span></div>
+                        </dd>
+                        <dd class="changetype-btn"></dd>
+                        <dd class="cancel-rec-btn click-record-cancel" style="display: none;"><a
+                        href="javascript:;" class="cancel-btn">取消</a></dd>
+                        </dl>
+                        <div id="rec-tips-bar">&lt;!&ndash;&ndash;&gt;</div>
+                        </div>
+                        </div>
+                    </div>
+                    <div class="dialog-btclose"><i class="content-close" onclick="$('.gusReply-dialog').hide();"></i>
+                    </div>
+                </div>
+            </div> -->
+
+
+            <div class="room-footer-bar talk-footer-bar" style="display: block">
+                <!--<div class="lr-goPlay-room" style="display: block"><a href="javascript:;" class="lr-goplay-btn">回到直播</a></div>-->
+                <nav class="nav">
+                    <ul class="tool-bar">
+                        <li class="tl-item">
+                            <button type="button" onclick="ctrl.invite()" class="tl-invite">
+                                <img src="/res/images/lv-bar-invite.png?v=20171209.193011" alt="邀请卡"
+                                     class="icon icon-invite">
+                            </button>
+                        </li>
+                        <li class="tl-item tl-discusbox">
+                            <div class="discussion-zone">
+
+                                <textarea v-cloak id="discuss-text-area" name=""
+                                          placeholder="点击这里输入文字"
+                                          class="discuss-input-text"></textarea>
+
+                                <!--<div class="ask-label-box">-->
+                                <!--<input id="lrsend-ask3" type="checkbox" name="lrsend-ask3"-->
+                                <!--value="" class="control-ask">-->
+                                <!--<label for="lrsend-ask3" class="ask-label"></label>-->
+                                <!--提问-->
+                                <!--</div>-->
+                            </div>
+                        </li>
+                        <li class="tl-item">
+                            <button type="button" onclick="talk_send()" class="tl-discussend-btn">发送</button>
+                        </li>
+                        <!--<li class="tl-item" style="display: none;">-->
+                        <!--<button type="button" class="tl-image"><img-->
+                        <!--src="/res/images/lv-bar-image.png?v=20171209.193011" alt="图片"-->
+                        <!--class="icon icon-image">-->
+                        <!--</button>-->
+                        <!--</li>-->
+                    </ul>
+                </nav>
+            </div>
+
+
+        </div>
+    </section>
+
+
+    <script>
+
+
+        var talk = new Vue({
+            el: '#msg_bos',
+            data: {
+                counter: 2,
+                name: 0,
+                avatar: 0,
+                content: 0,
+                jinyan: 0,
+                items: []
+                // items: [
+                    
+                //     {
+                //         name: '胡大官人',
+                //         content: '8888888888888888888888888888888888888888888888888888888888888888888888888888',
+                //         time: '20:33',
+                //         type: 2,
+                //         data_id: 4,
+                //         data_uid: 4,
+                //         avatar: 'https://img.wekuo.com/upload/user/portrait/2378148/20180126_175014?imageView2/2/w/80',
+
+                //     },
+
+                //     {
+                //         name: '胡大官人',
+                //         content: '9999999999999999999999999999999999999999999999999999999999999999999999999999999',
+                //         time: '20:33',
+                //         type: 1,
+                //         data_id: 5,
+                //         data_uid: 5,
+                //         avatar: 'https://img.wekuo.com/upload/user/portrait/2378148/20180126_175014?imageView2/2/w/80',
+
+                //     },
+
+                //     {
+                //         name: '胡大官人',
+                //         content: '1111111111111111111111111111111111111111111111111111111111111111111111111111111111',
+                //         time: '20:33',
+                //         type: 2,
+                //         data_id: 6,
+                //         data_uid: 6,
+                //         avatar: 'https://img.wekuo.com/upload/user/portrait/2378148/20180126_175014?imageView2/2/w/80',
+
+                //     },
+
+                // ],
+            },
+            // 在 `methods` 对象中定义方法
+            methods: {}
+        });
+        //讨论消息
+        $(function () {
+            $.post("{:url('live/get_talk')}",{id:'{$info.id}'},function (res) {
+                console.log(res.data);
+                if(res.code==1){
+                    talk.items=res.data;
+                    talk.counter=res.data.length;
+                }
+            });
+        });
+
+        //回复弹层
+        function reply(that) {
+//            console.log(that);
+            $('.gusReply-dialog').show();
+            talk.name = $(that).attr('name');
+            talk.avatar = $(that).attr('avatar');
+            talk.content = $(that).attr('content');
+        }
+
+        //删除消息
+        function del_msg(that) {
+            var content = $(that).attr('content');
+            var data_id = $(that).attr('data_id');
+            console.log(data_id);
+            content = content.substr(0, 10);
+            layer.open({
+                content: '确定要删除' + content + '?'
+                , btn: ['是的', '取消']
+                , yes: function (index) {
+                    layer.close(index);
+//                    talk.items.splice(index, 1, {})
+                    socket_send({type: 'talk_del', data_id: data_id,live_id:'{$info.id}'});
+
+
+                }
+            });
+        }
+
+        function jinyan(that) {
+
+            var text = $(that).text();
+
+            if (text == '禁言') {
+                var status=0;
+                $(that).text('取消禁言');
+            } else {
+                var status=1;
+                $(that).text('禁言');
+            }
+
+            var uid = $(that).attr('data_uid');
+            socket_send({type: 'talk_jinyan', data_uid: uid,live_id:'{$info.id}',status:status});
+        }
+
+
+        //发送讨论
+        function talk_send() {
+
+            var content = $('#discuss-text-area').val();
+            if (!content) {
+                return false;
+            }
+            //type=1 观众 type=2 主播
+            var li = {
+                name: '{$user.nickname}',
+                content: content,
+                time: false,
+                type: 2,
+                data_id: 0,
+                datatype: 'talk',
+                uid:'{$userid}',
+                live_id:'{$info.id}',
+                avatar: '{$user.photo}',
+
+            }
+            socket_send({type: 'talk', content: li})
+
+
+        }
+
+
+        //        setTimeout(function () {
+        //            msg.counter=100;
+        //        },4000)
+
+
+    </script>
+
+
+    <!--购买弹层-->
+    <div id="pay_dialog" class="qrpay-dialog" style="display: none;">
+        <div class="withdraw-wrapper">
+            <div class="dialog-main">
+                <div class="dialog-header">
+                    <div class="title">长按识别二维码进行付款</div>
+                </div>
+                <div class="dialog-body">
+                    <div class="weixin"><p class="qrpay-tit">支付金额： <span class="num purchase_qrcode_money">99</span>元
+                    </p> <img src="/res/images/qr-live.jpg?v=20171209.193010" alt="微信支付" style="padding: 20px"
+                              class="qr-card purchase_qrcode_img"></div>
+                </div>
+                <div class="dialog-footer">
+                    <span class="close" onclick="$('#pay_dialog').hide()" style="
+                                position: absolute;
+                                top: 108%;
+                                left: 50%;
+                                z-index: 1;
+                                margin: -22px 0 0 -22px;
+                                display: inline-block;
+                                width: 44px;
+                                height: 44px;
+                                background: url(/res/images/lv-ico-close1.png) center center no-repeat;
+                                background-size: 35px 35px;">
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="qr_dialog" class="qrpay-dialog" style="display: none;">
+        <div class="withdraw-wrapper">
+            <div class="dialog-main">
+                <div class="dialog-header">
+                    <div class="title">可添加至各宣传渠道进行推广</div>
+                </div>
+                <div class="dialog-body" style="height: 250px">
+                    <div class="weixin" id="qr_img">
+
+                    </div>
+                    <img id="imgOne" src="">
+                </div>
+                <div class="dialog-footer">
+                    <span class="close" onclick="$('#qr_dialog').hide()" style="
+                                position: absolute;
+                                top: 108%;
+                                left: 50%;
+                                z-index: 1;
+                                margin: -22px 0 0 -22px;
+                                display: inline-block;
+                                width: 44px;
+                                height: 44px;
+                                background: url(/res/images/lv-ico-close1.png) center center no-repeat;
+                                background-size: 35px 35px;">
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!--赠送弹层-->
+    <div class="dialog packGiftDia" style="display: none;">
+        <div class="dialog-bg" onclick="$('.packGiftDia').hide()"></div>
+        <div id="pack-gifts" class="dialog-bottomMain">
+            <ul class="content-list">
+                <li class="i-info"><h5 class="title">打包豪礼赠送给好友们来听课！</h5>
+                    <p class="time">直播于<span>01月31日 19:00</span>开始</p></li>
+                <li class="i-main-box"><h5 class="im-title">赠送数量</h5>
+                    <ol id="rwdl-gifts-nums" class="rwdlgifts-btns clearfix">
+                        <li class=""><a href="javascript:;" data-value="1">1份</a></li>
+                        <li class="on"><a href="javascript:;" data-value="2">2份</a></li>
+                        <li class=""><a href="javascript:;" data-value="5">5份</a></li>
+                        <li class=""><a href="javascript:;" data-value="10">10份</a></li>
+                        <li class=""><a href="javascript:;" data-value="20">20份</a></li>
+                        <li class=""><a href="javascript:;" data-value="50">50份</a></li>
+                    </ol>
+                    <div class="i-flex">
+                        <input type="hidden" name="price" id="price" value="{$info.price}">
+                        <div class="i-left">共计：<span id="total-money" class="money">¥ 0.00</span></div>
+                    </div>
+                    <p class="im-tip">领取后，好友即可免费参加该课程，课程永久有效。</p></li>
+                <li>
+                    <button type="button" class="footer-btn pack"
+                            onclick="$('.dialog').hide();$('.pack_success').fadeIn(300)">打包赠礼
+                    </button>
+
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function total() {
+            var price = $('#price').val();
+            var totalmoney = $('#total-money');
+            var num = $('li.on a').attr('data-value');
+            console.log(price);
+            console.log(num);
+            var total = price * num;
+            //保留2位小数
+            total = Math.round(total * 100) / 100
+            totalmoney.text("¥ " + price * num);
+
+        }
+
+
+        $(function () {
+            total();
+        });
+        $('#rwdl-gifts-nums li').click(function () {
+            $('#rwdl-gifts-nums li').removeClass('on');
+            $(this).addClass('on');
+            total();
+        });
+
+
+    </script>
+
+    <!--赠送成功-->
+    <div class="dialog checkPackGiftDia pack_success" style="display: none;">
+        <div class="dialog-bg"></div>
+        <div class="dialog-bottomMain">
+            <ul class="content-list">
+                <li class="i-ready"><h5 class="title">您的赠礼已经包装好～</h5>
+                    <p class="text">查看领取情况，请在“<span class="text-primary">赠送给好友</span>”中查看</p></li>
+                <li><a href="{:url('index/center')}" type="button" class="footer-btn check-pack">查看赠礼</a></li>
+            </ul>
+        </div>
+    </div>
+
+
+    <!--倒计时-->
+    <div id="status-wait-dlg" class="dialog countDownDia" style="display: none">
+        <div class="dialog-bgc"></div>
+        <div class="dialog-main">
+            <div class="dialog-title">距离课堂开始还有</div>
+            <div class="dialog-content">
+                <ol class="countdown-box">
+                    <li id="day-count" class="num">1</li>
+                    <li class="unit">天</li>
+                    <li id="hour-count" class="num">3</li>
+                    <li class="unit">时</li>
+                    <li id="min-count" class="num">05</li>
+                    <li class="unit">分</li>
+                    <li id="sec-count" class="num">7</li>
+                    <li class="unit">秒</li>
+                </ol>
+            </div>
+            <button type="button" class="dialog-btclose" onclick="$('.dialog').hide();">我知道了</button>
+        </div>
+    </div>
+
+    <script>
+        layui.use('util', function () {
+            var util = layui.util;
+            //示例
+            var endTime = {$info.endTime} //假设为结束日期
+                , serverTime = {$info.newTime}; //假设为当前服务器时间，这里采用的是本地时间，实际使用一般是取服务端的
+
+            util.countdown(endTime, serverTime, function (date, serverTime, timer) {
+                $('#day-count').text(date[0]);
+                $('#hour-count').text(date[1]);
+                $('#min-count').text(date[2]);
+                $('#sec-count').text(date[3]);
+
+            });
+        });
+    </script>
+
+
+    <!--图床-->
+    <section class="lr-material-lib" style="display: none;">
+        <div class="lrml-wraper">
+            <button type="button" class="lrml-backBtn">返回直播间</button>
+            <div id="material-image-room" class="lrml-body" _scroll_loader_bind="1"><p class="lrml-tip">
+                点击发送即可在直播中放出图片，省去上传的时间
+            </p>
+                <ul id="images-material-list" class="lrml-lib-list list-images">
+                    <li data-id="12748" data-index="0" class="item">
+                        <div class="i-content">
+                            <div class="my-gallery"><img class="lib-image"
+                                                         src="https://alcdn.wekuo.com/upload/live-images/1755/5a6b2099d0dbe9743e3690af?x-oss-process=image/resize,w_750">
+                            </div>
+                        </div>
+                        <button type="button" class="del-material-img list-btn list-btn-del"
+                                style="border-radius: 0px;">删除
+                        </button>
+                        <button type="button" class="send-material-img list-btn list-btn-send"
+                                style="border-radius: 0px;">发送
+                        </button>
+                    </li>
+                </ul>
+            </div>
+            <button id="select-material-images" type="button" class="lrml-uploadBtn"
+                    style="border-radius: 0px; margin: 0px auto;">上传图片素材
+            </button>
+        </div>
+    </section>
+
+    <!--视频管理-->
+    <section class="lr-material-lib" style="display: none;">
+        <div class="lrml-wraper">
+            <button type="button" class="lrml-backBtn">返回直播间</button>
+            <div id="lrml-body-lib-video" class="lrml-body"><p class="lrml-tip">
+                点击发送即可在直播中放出视频，省去上传的时间
+            </p>
+                <ul id="video-material-list" class="lrml-lib-list list-video" style="display: block;">
+                    <li class="one-video-material item clearfix">
+                        <div class="i-left-icon"></div>
+                        <div class="i-main"><h5 class="i-video-name">秦时明月.mp4</h5>
+                            <div class="i-upload">
+                                <div class="progress-bar-bg">
+                                    <div class="progress" style="width: 1%; display: block;"></div>
+                                </div>
+                                <div class="i-upload-tip clearfix"><span class="progress-text text-left">0／1M</span>
+                                    <span class="speed-text fr">30kb/s</span></div>
+                                <div class="i-transcoding-tip clearfix" style="display: none;"><span class="text-left">请稍等，转码中... </span>
+                                </div>
+                            </div>
+                            <div class="i-btns-box">
+                                <button type="button" class="video-del-btn list-btn list-btn-del">删除</button>
+                                <button type="button" class="video-send-btn list-btn list-btn-send">发送</button>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <button id="select-video-btn" type="button" class="lrml-uploadBtn">上传视频素材</button>
+            <input type="file" id="choose-video-input" accept="video/*" style="display: none;"></div>
+    </section>
+
+    <!--上传录音-->
+    <section class="lr-material-lib" style="display: none;">
+        <div class="lrml-wraper">
+            <button type="button" class="lrml-backBtn">返回直播间</button>
+            <div id="lrml-body-lib-voice" class="lrml-body"><p class="lrml-tip">
+                上传的录音时间不能超过2分钟
+            </p>
+                <ul id="voice-material-list" class="lrml-lib-list list-voice" style="display: block;"></ul>
+            </div>
+            <div class="lrml-uploadBtns">
+                <button type="button" class="btn type1"><span class="text">录音</span></button>
+                <button type="button" class="btn"><span class="text">上传MP3素材</span></button>
+            </div>
+            <div class="tool-bar-bottom control-zooe" style="display: none;">
+                <div class="control-zooe-bg"></div>
+                <div class="recard-main-zooe">
+                    <div class="control-zooe-close"></div>
+                    <!--<div id="record-controller-bar" class="record-controller-zooe clearfix changeType"-->
+                    <!--style="display: none;">-->
+                    <!--<dl class="recording_longtap">-->
+                    <!--<dd class="recording-txttip">按住语音按钮说话</dd>-->
+                    <!--<dd class="btn-dd"><i class="recording-ani"></i>-->
+                    <!--<div class="btn-recording start_rec press-record-btn"></div>-->
+                    <!--</dd>-->
+                    <!--<dd class="type-dd">-->
+                    <!--<div class="types-wrap"><span class="text on">长按</span> <span class="text slide right">单击</span>-->
+                    <!--</div>-->
+                    <!--</dd>-->
+                    <!--<dd class="changetype-btn"></dd>-->
+                    <!--</dl>-->
+                    <!--<dl class="recording_click">-->
+                    <!--<dd class="recording-txttip">-->
+                    <!--点击语音按钮开始录音，再次点击结束录音-->
+                    <!--</dd> &lt;!&ndash;&ndash;&gt;-->
+                    <!--<dd class="btn-dd"><i class="recording-ani"></i>-->
+                    <!--<div class="btn-recording start-rec click-record-begin"></div>-->
+                    <!--<div class="btn-recording stop_rec click-record-stop" style="display: none;"></div>-->
+                    <!--<div id="send-click-btn" class="btn-recording send_rec click-record-send"-->
+                    <!--style="display: none;">-->
+                    <!--发送-->
+                    <!--</div>-->
+                    <!--</dd>-->
+                    <!--<dd class="type-dd">-->
+                    <!--<div class="types-wrap"><span class="text slide left">长按</span> <span-->
+                    <!--class="text on">单击</span></div>-->
+                    <!--</dd>-->
+                    <!--<dd class="changetype-btn"></dd>-->
+                    <!--<dd class="cancel-rec-btn click-record-cancel" style="display: none;"><a href="javascript:;"-->
+                    <!--class="cancel-btn">取消</a>-->
+                    <!--</dd>-->
+                    <!--</dl>-->
+                    <!--<div id="rec-tips-bar">&lt;!&ndash;&ndash;&gt;</div>-->
+                    <!--</div>-->
+                </div>
+            </div>
+            <input type="file" id="choose-voice-input" accept="audio/mpeg" style="display: none;">
+            <audio id="upload-audio" style="display: none;"></audio>
+        </div>
+    </section>
+
+
+    <!--资源管理-->
+    <section class="lr-material-group-lib" style="display: none;">
+        <div class="lrml-wraper">
+            <div class="lrml-back-room-btn"></div>
+            <div class="lrml-body">
+                <ul class="lib-tabs">
+                    <li class="lib-item active">图片</li>
+                    <li class="lib-item">音频</li>
+                    <li class="lib-item">视频</li>
+                </ul>
+                <div class="lib-main-block">
+                    <div class="lib-wrapper-primary">
+                        <div class="tip-header"><span class="text">点击图片选择“发送”即可在直播中放出图片</span></div>
+                        <div class="matters-container">
+                            <ul class="material-list images-material-list">
+                                <li class="item"><img
+                                        src="/res/images/banner/wx-banner-yundong.jpg?v=20171209.193010"
+                                        alt="" class="img"></li>
+                                <li class="item"><img
+                                        src="/res/images/banner/wx-banner-yundong.jpg?v=20171209.193010"
+                                        alt="" class="img"></li>
+                                <li class="item"><img
+                                        src="/res/images/banner/wx-banner-yundong.jpg?v=20171209.193010"
+                                        alt="" class="img"></li>
+                                <li class="item"><img
+                                        src="/res/images/banner/wx-banner-yundong.jpg?v=20171209.193010"
+                                        alt="" class="img"></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="lib-block-footer">
+                        <button class="btn">上传图片素材</button>
+                    </div>
+                </div>
+                <div class="lib-main-block" style="display: none;">
+                    <div class="lib-wrapper-primary">
+                        <div class="tip-header"><span class="text">点击音频选择“发送”即可在直播中放出音频</span></div>
+                        <div class="matters-container">
+                            <ul class="material-list audios-material-list list-voice">
+                                <li class="item">
+                                    <div class="lib-voice-zone">
+                                        <div class="lib-voice-player">
+                                            <div class="content-voice">
+                                                <audio preload="none" class="voice-audio material-voice-audio"></audio>
+                                                <div class="material-name">语音111111</div>
+                                                <span class="time">60″</span>
+                                                <div class="voice-play-control"><img
+                                                        src="/res/images/live-voice-start.png?v=20171209.193010"
+                                                        class="voice-icon voice-content-start"> <img
+                                                        src="/res/images/live-voice-pause.png?v=20171209.193010"
+                                                        class="voice-icon voice-content-pause" style="display: none;">
+                                                    <img src="/res/images/live-loading.gif?v=20171209.193011"
+                                                         class="voice-icon voice-content-loading"
+                                                         style="display: none;"></div>
+                                            </div>
+                                            <div class="send-state">已发送</div>
+                                            <button type="button" class="resend-btn"><img
+                                                    src="/res/images/live-resend.png?v=20171209.193011"
+                                                    alt="发送失败" class="btn-iocn"></button>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="not-main-item">
+                                    <div class="not-content"><img
+                                            src="/res/images/lv-notmain.png?v=20171209.193011"
+                                            alt="空空如也" class="not-content-img">
+                                        <p class="not-content-text">这里空空如也...</p></div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="lib-block-footer">
+                        <button class="btn">录音</button>
+                        <button class="btn">上传语音素材</button>
+                    </div>
+                </div>
+                <div class="lib-main-block" style="display: none;">
+                    <div class="lib-wrapper-primary">
+                        <div class="tip-header"><span class="text">点击视频选择“发送”即可在直播中放出视频</span></div>
+                        <div class="matters-container">
+                            <ul class="material-list videos-material-list">
+                                <li class="item">
+                                    <div class="video-material">
+                                        <div class="left-icon"><img
+                                                src="/res/images/live-lib-v_1.png?v=20171209.193010"
+                                                alt="视频" class="icon"></div>
+                                        <div class="video-material-main"><h4 class="vm-name">haha.mp4</h4>
+                                            <div class="update-tip">
+                                                <div class="progress-bar"><span class="progress"
+                                                                                style="width: 10%;"></span></div>
+                                                <div class="clearfix"><span class="download-all">21.32MB／100MB</span>
+                                                    <span class="download-speed fr">211.21KB／S</span></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="item">
+                                    <div class="video-material">
+                                        <div class="left-icon"><img
+                                                src="/res/images/live-lib-v_1.png?v=20171209.193010"
+                                                alt="视频" class="icon"></div>
+                                        <div class="video-material-main"><h4 class="vm-name">haha.mp4</h4>
+                                            <div class="update-tip">
+                                                <div class="progress-bar"><span class="progress"
+                                                                                style="width: 10%;"></span></div>
+                                                <div class="transcoding-tip">请稍等，正在转码...</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="not-main-item">
+                                    <div class="not-content"><img
+                                            src="/res/images/lv-notmain.png?v=20171209.193011"
+                                            alt="空空如也" class="not-content-img">
+                                        <p class="not-content-text">这里空空如也...</p></div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="lib-block-footer">
+                        <button class="btn">上传视频素材</button>
+                    </div>
+                </div>
+            </div>
+            <div class="tool-bar-bottom control-zooe" style="display: none;">
+                <div class="control-zooe-bg"></div>
+                <div class="recard-main-zooe">
+                    <div class="control-zooe-close"></div>
+                    <!--<div id="record-controller-bar" class="record-controller-zooe clearfix changeType"-->
+                    <!--style="display: none;">-->
+                    <!--<dl class="recording_longtap">-->
+                    <!--<dd class="recording-txttip">按住语音按钮说话</dd>-->
+                    <!--<dd class="btn-dd"><i class="recording-ani"></i>-->
+                    <!--<div class="btn-recording start_rec press-record-btn"></div>-->
+                    <!--</dd>-->
+                    <!--<dd class="type-dd">-->
+                    <!--<div class="types-wrap"><span class="text on">长按</span> <span class="text slide right">单击</span>-->
+                    <!--</div>-->
+                    <!--</dd>-->
+                    <!--<dd class="changetype-btn"></dd>-->
+                    <!--</dl>-->
+                    <!--<dl class="recording_click">-->
+                    <!--<dd class="recording-txttip">-->
+                    <!--点击语音按钮开始录音，再次点击结束录音-->
+                    <!--</dd> &lt;!&ndash;&ndash;&gt;-->
+                    <!--<dd class="btn-dd"><i class="recording-ani"></i>-->
+                    <!--<div class="btn-recording start-rec click-record-begin"></div>-->
+                    <!--<div class="btn-recording stop_rec click-record-stop" style="display: none;"></div>-->
+                    <!--<div id="send-click-btn" class="btn-recording send_rec click-record-send"-->
+                    <!--style="display: none;">-->
+                    <!--发送-->
+                    <!--</div>-->
+                    <!--</dd>-->
+                    <!--<dd class="type-dd">-->
+                    <!--<div class="types-wrap"><span class="text slide left">长按</span> <span-->
+                    <!--class="text on">单击</span></div>-->
+                    <!--</dd>-->
+                    <!--<dd class="changetype-btn"></dd>-->
+                    <!--<dd class="cancel-rec-btn click-record-cancel" style="display: none;"><a href="javascript:;"-->
+                    <!--class="cancel-btn">取消</a>-->
+                    <!--</dd>-->
+                    <!--</dl>-->
+                    <!--<div id="rec-tips-bar">&lt;!&ndash;&ndash;&gt;</div>-->
+                    <!--</div>-->
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+</div>
+
+
+</body>
+</html>

@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <!-- 添加到主屏后的标题（iOS 6 新增） -->
+    <meta name="apple-mobile-web-app-title" content="启蒙">
+    <!-- 是否启用 WebApp 全屏模式，删除苹果默认的工具栏和菜单栏 -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <!-- 设置苹果工具栏颜色 -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <!-- 添加智能 App 广告条 Smart App Banner（iOS 6+ Safari） -->
+    <meta name="apple-itunes-app" content="app-id=myAppStoreID, affiliate-data=myAffiliateData, app-argument=myURL">
+    <!-- 忽略页面中的数字识别为电话，忽略email识别 -->
+    <meta name="format-detection" content="telephone=no">
+    <title> 直播间主页 </title>
+    <link rel="stylesheet" href="/res/pltf/live/css/reset.7588.css?v=20171209.193011">
+    <link rel="stylesheet" href="/res/pltf/live/css/main.9707.css?v=20180105.110503">
+
+    <script src="/res/lib/jquery-3.1.0.min.js?v=20171209.193011"></script>
+
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+
+</head>
+<body>
+
+<script src="/res/lib/jquery.qrcode.min.js?v=20171209.193012"></script>
+<div id="app" class="in-main fixed-bottom-bar">
+    <div id="page-loading" style="display: none;">
+        <div id="loading-center">
+            <div id="loading-center-absolute"><img
+                    src="/res/images/loading-ripple.svg?v=20171209.193011" alt="加载中 ..."
+                    class="loader-pic"> <h5 class="loader-text">启蒙微课堂</h5></div>
+        </div>
+    </div>
+    <div class="account-header">
+        <div class="account-hdbg-zone">
+            <img class="account-bg"  src="{$user_info.photo}">
+        </div>
+        <div class="account-main">
+            <div class="account-avatar-zone">
+                <img alt="" class="account-avatar"  src="{$user_info.photo}">
+            </div>
+            <h2 class="account-title">
+                {if $user_info.live_name}
+                    {$user_info.live_name}
+                {else}
+                    {$user_info.nickname}的直播间
+                {/if}
+            </h2>
+            <div class="account-follow-num"><span class="num">{$user_info.be_guanzhu}</span>人关注</div>
+             <!--<button type="button" class="follow-btn">关注</button>-->
+
+            <div class="account-desc" style="text-align: center;line-height: 25px" onclick="show_alert('{$user_info.introduce}')">
+                {if $user_info.introduce}
+                    {$user_info.introduce}
+                {else}
+                    描述下自己吧~
+                {/if}
+                <img src="/res/images/lv-edit-live.png?v=20171209.193011" onclick="show_alert('{$user_info.introduce}')" alt="" style="width: 25px" class="icon">
+            </div>
+        </div>
+        <!--<a href="/live/account/edit" title="编辑直播间" target="_blank" class="edit-btn" style=""><img-->
+        <!--src="/res/images/lv-icon-edit.png?v=20171209.193010" alt="" class="icon"> <span-->
+        <!--class="text">编辑</span>-->
+        <!--</a>-->
+
+        <!--<a href="/live/setting/admin" title="管理员" target="_blank" class="manage-btn"><img-->
+        <!--src="/res/images/lv-icon-edit.png?v=20171209.193010" alt="" class="icon"> <span-->
+        <!--class="text">编辑</span>-->
+        <!--</a>-->
+
+        <!--<a href="/live/setting/admin" title="管理员" target="_blank" class="manage-btn"><img-->
+        <!--src="/res/images/lv-icon-manage.png?v=20171209.193010" alt="" class="icon"> <span-->
+        <!--class="text">管理员</span>-->
+        <!--</a>-->
+
+        <!--<a href="/live/account/profits" title="收益报表" target="_blank"-->
+        <!--class="statement-btn"><img-->
+        <!--src="/res/images/lv-icon-statement.png?v=20171209.193010" alt="" class="icon"> <span-->
+        <!--class="text">收益</span></a> -->
+        <!---->
+    </div>
+    <section class="lv-lesson-mod" style="display: none;">
+        <div class="lesson-mod-header"><h3 class="title">精品课程</h3></div>
+        <ul class="lessons-main"></ul> <!----></section>
+
+
+    <section class="lv-lesson-mod homepage">
+        <div class="lesson-mod-header"><h3 class="title">直播课程</h3></div>
+        <ul class="lessons-main">
+            {foreach name="lives" item="val" key="key"}
+                <li class="item border-1px">
+                    <a href="{:url('live/in')}?id={$val.id}" class="nav-block">
+                        <div class="cover-img">
+                            {if $val.cover_pic}
+                                <img src="{$val.cover_pic}" alt="" class="img">
+                            {else}
+                                <img src="/uploads/20180209\8759911c9bf79287ce93791e51e3e72a.png" alt="" class="img">
+                            {/if}
+                            <div class="lali-topic-bar">
+                                <span class="tip-price">
+                                    {if $val.price == 0}
+                                        免费
+                                    {else}
+                                        ￥ {$val.price}
+                                    {/if}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="main">
+                            <h4 class="ls-name">
+                                {$val.title}
+                            </h4>
+                            <div class="times-zone"><span class="t-deteil">{$val.begin_time|date="Y-m-d H:i:s",###}</span></div>
+                            <div class="learned">
+                                <i class="icon-listen"></i> 
+                                <span>{$val.enlist}</span>人参加
+                                {if $val.is_show == 0}
+                                    <span style="color:#da1d1d;">已下架</span>
+                                {/if}
+                                {if $val.is_top == 1}
+                                    <span style="color:#da1d1d;">置顶</span>
+                                {/if}
+                            </div>
+                        </div>
+                    </a>
+                    <button type="button" onclick="edit_dialog('{$val.id}','{$val.title}','{$val.is_show}','{$val.state}','{$val.is_top}');" class="set-btn" >
+                        <img src="/res/images/live-ico-set3.png?v=20171209.193011" alt="设置" class="icon">
+                        <span class="text">设置</span>
+                    </button>
+                </li>
+            {/foreach}
+        </ul> <!----></section>
+
+    <section class="lv-lesson-mod" style="display: none;">
+        <div class="lesson-mod-header"><h3 class="title">系列课程</h3></div>
+        <ul class="lessons-main"></ul> <!---->
+    </section> <!---->
+    <div>
+        <nav class="account-bottom-bar"><a href="#" type="button" class="totop-btn show" style="display: none;"><img
+                src="/res/images/lv-totop.png?v=20171209.193011" alt="回到顶部" class="icon"></a>
+            <ul class="account-nav">
+                <li class="item" style="flex: 0 0 100%;"><a href="{:url('index/live_add')}" title="新建直播" class="btn">新建直播</a>
+                </li>
+                <!--<li class="item"><a href="javascript:;" title="新建系列课程" class="btn1">新建系列课程</a></li>-->
+            </ul>
+        </nav>
+    </div> <!---->
+
+
+
+    <!--查看链接-->
+    <div class="urlshow-dialog" style="display: none;">
+        <div class="center-wrapper">
+            <div class="center-main">
+                <div class="dialog-content"><h4 class="title">查看链接</h4>
+                    <div class="textarea-zone">
+                        <div class="textarea-label">详情页面：</div>
+                        <button type="button" onclick="qr('aaaaa')" class="right-btn">链接二维码</button>
+                        <p class="textarea-control">https://live.wekuo.com/lv/dt/1755</p>
+                    </div>
+
+                    <div class="textarea-zone">
+                        <div class="textarea-label">播放页面：</div>
+                        <button type="button" onclick="qr('bbbbb')" class="right-btn">链接二维码</button>
+                        <p class="textarea-control">https://live.wekuo.com/lv/p/1755</p>
+                    </div>
+                </div>
+                <div class="dialog-footer">
+                    <a href="javascript:;" onclick="$('.urlshow-dialog').hide();"
+                       class="dialog-confirm-btn dialog-btn confirm">我知道了</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="qr_dialog" class="qrpay-dialog" style="display: none;">
+        <div class="withdraw-wrapper">
+            <div class="dialog-main">
+                <div class="dialog-header">
+                    <div class="title">可添加至各宣传渠道进行推广</div>
+                </div>
+                <div class="dialog-body" style="height: 250px">
+                    <div class="weixin" id="qr_img">
+
+                    </div>
+                    <img id="imgOne" src="">
+                </div>
+                <div class="dialog-footer">
+                    <span class="close" onclick="$('#qr_dialog').hide()" style="
+                                position: absolute;
+                                top: 108%;
+                                left: 50%;
+                                z-index: 1;
+                                margin: -22px 0 0 -22px;
+                                display: inline-block;
+                                width: 44px;
+                                height: 44px;
+                                background: url(/res/images/lv-ico-close1.png) center center no-repeat;
+                                background-size: 35px 35px;">
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/res/layui/layer_mobile/layer.js"></script>
+    <script>
+         function qr(url) {
+            $('#qr_img').html('');
+            var qrcode = $('#qr_img').qrcode(
+                {width: 200, height: 200, correctLevel: 0, text: url}
+            ).hide();
+            //生成图片
+            var canvas = qrcode.find('canvas').get(0);
+            $('#imgOne').attr('src', canvas.toDataURL('image/jpg'))
+
+
+            $('#qr_dialog').fadeIn();
+
+        }
+
+        // 设置按钮
+        function edit_dialog(id,title,is_show,state,top){
+            $('.more-control-dialog').fadeIn(300);
+            $('.dialog-title').html(title);
+            $('.dia_val').val(id);
+            if(is_show == 0){
+                $('.kaiguan').hide();
+                $('.kaiqi').fadeIn();
+            }else{
+                $('.kaiqi').hide();
+                $('.kaiguan').fadeIn();
+            }
+
+            if(state == 0){
+                $('.re_start').hide();
+            }
+
+            if(top == 1){
+                $('.istop').hide();
+                $('.notop').fadeIn();
+            }else{
+                $('.notop').hide();
+                $('.istop').fadeIn();
+            }
+
+        }
+
+        // 编辑
+        function edit_live()
+        {
+            var id = $('.dia_val').val();
+            if(id > 0){
+                window.location.href="{:url('index/live_edit')}?id="+id;
+            }
+        }
+
+        // 确定、取消置顶
+        function Top(istop=1)
+        {
+            var id = $('.dia_val').val();
+
+            if(id > 0){
+                  
+                $.post("{:url('index/Top')}",{id:id,is_top:istop},function (res) {
+
+                    layer.open({
+                        content: res.msg
+                        ,skin: 'msg'
+                        ,time: 2 //2秒后自动关闭
+                    });
+                    
+                    setTimeout(function () {
+                        location.replace(location.href);
+                    }, 2000);
+
+                });
+
+            }
+        }
+
+        // 上、下架
+        function Loff(isshow=0){
+            var id = $('.dia_val').val();
+            if(id > 0){
+                  
+                $.post("{:url('index/Loff')}",{id:id,is_show:isshow},function (res) {
+
+                    layer.open({
+                        content: res.msg
+                        ,skin: 'msg'
+                        ,time: 2 //2秒后自动关闭
+                    });
+                    
+                    setTimeout(function () {
+                        location.replace(location.href);
+                    }, 2000);
+
+                });
+
+            }
+        }
+
+        // 重開直播
+        function re_start(){
+            var id = $('.dia_val').val();
+            if(id > 0){
+                  
+                $.post("{:url('index/re_start')}",{id:id},function (res) {
+
+                    layer.open({
+                        content: res.msg
+                        ,skin: 'msg'
+                        ,time: 2 //2秒后自动关闭
+                    });
+                    
+                    setTimeout(function () {
+                        location.replace(location.href);
+                    }, 2000);
+
+                });
+
+            }
+        }
+
+    </script>
+
+
+    <div class="dialog more-control-dialog" style="display: none">
+        <div class="dialog-bg"></div>
+        <div class="dialog-bottomMain"><h4 class="dialog-title">直播课程：PHP打印队列实现</h4>
+            <ul class="control-tool-list">
+                <li class="item" onclick="edit_live()">
+                    <img src="/res/images/lv-edit-live.png?v=20171209.193011" alt="" class="icon"> 
+                    <span class="text">编辑</span>
+                </li>
+                <!--<li class="item">-->
+                    <!--<img src="/res/images/lv-o-send.png?v=20171209.193010" alt=""-->
+                                      <!--class="icon"> <span class="text">推送</span>-->
+                <!--</li>-->
+                <!--<a href="javascript:;">-->
+                    <!--<li class="item"><img src="/res/images/lv-o-teach.png?v=20171220.205407" alt=""-->
+                                          <!--class="icon"> <span class="text">邀请嘉宾</span>-->
+                    <!--</li>-->
+                <!--</a>-->
+                <li class="item istop" onclick="Top(1);">
+                    <img src="/res/images/lv-o-top.png?v=20171209.193010" alt="" class="icon"> 
+                    <span class="text">置顶</span>
+                </li>
+                <li class="item notop" onclick="Top(0);">
+                    <img src="/res/images/lv-o-top.png?v=20171209.193010" alt="" class="icon"> 
+                    <span class="text">取消置顶</span>
+                </li>
+                <li class="item kaiguan" onclick="Loff(0);">
+                    <img src="/res/images/lv-o-down.png?v=20171209.193011" alt="" class="icon"> 
+                    <span class="text Loff">下架</span>
+                </li> <!---->
+                <li class="item kaiqi" onclick="Loff(1);">
+                    <img src="/res/images/lv-o-down.png?v=20171209.193011" alt="" class="icon"> 
+                    <span class="text Loff">上架</span>
+                </li>
+                <li class="item re_start" onclick="re_start()">
+                    <img src="/res/images/lv-o-start.png?v=20171209.193011" alt="" class="icon"> 
+                    <span class="text">重开直播</span>
+                </li>
+                <input type="hidden" value="" class="dia_val">
+                <!-- <li class="item" onclick="$('.dialog').hide();$('.urlshow-dialog').fadeIn(300);">
+                    <img src="/res/images/lv-check-link.png?v=20171209.193010" alt="" class="icon"> 
+                    <span class="text">查看链接</span>
+                </li> -->
+                <!-- <li class="item">
+                    <img src="/res/images/lv-o-service.png?v=20171209.193011" alt="" class="icon"> 
+                    <span class="text">联系客服</span>
+                </li> -->
+            </ul>
+            <button type="button" class="close-dialog" onclick="$('.dialog').hide();">取消</button>
+        </div>
+    </div>
+
+
+    <!--<div class="dialog more-control-dialog">-->
+    <!--<div class="dialog-bg"></div>-->
+    <!--<div class="dialog-bottomMain"><h4 class="dialog-title">系列课程：PHP实战</h4>-->
+    <!--<ul class="control-tool-list"><a href="javascript:;">-->
+    <!--<li class="item"><img src="/res/images/lv-edit-live.png?v=20171209.193011" alt=""-->
+    <!--class="icon"> <span class="text">编辑</span></li>-->
+    <!--</a>-->
+    <!--<li class="item"><img src="/res/images/lv-o-send.png?v=20171209.193010" alt=""-->
+    <!--class="icon"> <span class="text">推送</span></li> &lt;!&ndash;&ndash;&gt;-->
+    <!--<li class="item"><img src="/res/images/lv-o-top.png?v=20171209.193010" alt=""-->
+    <!--class="icon"> <span class="text">置顶</span></li>-->
+    <!--<li class="item"><img src="/res/images/lv-o-down.png?v=20171209.193011" alt=""-->
+    <!--class="icon"> <span class="text">下架</span></li> &lt;!&ndash;&ndash;&gt; &lt;!&ndash;&ndash;&gt;-->
+    <!--<li class="item"><img src="/res/images/lv-check-link.png?v=20171209.193010" alt=""-->
+    <!--class="icon"> <span class="text">查看链接</span></li>-->
+    <!--<a href="javascript:;">-->
+    <!--<li class="item"><img src="/res/images/lv-o-place.png?v=20171209.193010" alt=""-->
+    <!--class="icon"> <span class="text">渠道分销</span></li>-->
+    <!--</a>-->
+    <!--<li class="item"><img src="/res/images/lv-o-service.png?v=20171209.193011" alt=""-->
+    <!--class="icon"> <span class="text">联系客服</span></li>-->
+    <!--</ul>-->
+    <!--<button type="button" class="close-dialog">取消</button>-->
+    <!--</div>-->
+    <!--</div>-->
+
+    <div class="back-center-box"><a href="{:url('index/index')}" title="回到首页" class="turn-btn left">首页</a></div>
+</div>
+
+
+<!--内容弹层-->
+<div class="dialog alter-dialog" style="display: none;">
+    <div class="dialog-bg"></div>
+    <div class="center-main">
+        <div class="dialog-content"><h4 class="title"></h4>
+            <div class="textarea-zone" style="">
+                <input class="textarea-control" id="introduce" placeholder="" name="introduce">
+            </div>
+            <div class="textarea-zone" style="display: none;">
+                <p class="textarea-control"></p>
+            </div>
+        </div>
+        <div class="dialog-footer"><!---->
+            <a href="javascript:;" class="dialog-confirm-btn dialog-btn confirm" onclick="editIntro()">确定</a>
+        </div>
+    </div>
+</div>
+
+<script src="/res/layui/layer_mobile/layer.js"></script>
+<script>
+    function show_alert(text) {
+        $('.textarea-control').val(text);
+        $('.alter-dialog').fadeIn(300);
+    }
+
+    // 更新个人介绍
+    function editIntro(){
+        var introduce = $('#introduce').val();
+
+        $.post("{:url('index/editIntro')}",{introduce:introduce},function(result){
+            if(result.code == 1){
+                $('.alter-dialog').hide();
+            }
+
+            layer.open({
+                content: result.msg
+                ,skin: 'msg'
+                ,time: 2 //2秒后自动关闭
+            });
+
+            location.replace(location.href);
+
+        });
+
+    }
+
+
+</script>
+
+
+</body>
+</html>
