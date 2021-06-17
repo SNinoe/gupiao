@@ -1,0 +1,100 @@
+﻿{include file="Public:meta"}
+
+<style type="text/css">
+.attest p{margin: 0 auto; text-align: left;}
+</style>
+
+<title>认证申请列表</title>
+</head>
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 会员管理 <span class="c-gray en">&gt;</span> 认证申请 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container">
+	<div class="mt-20">
+		<table class="table table-border table-bordered table-bg table-hover table-sort">
+			<thead>
+				<tr class="text-c">
+					<!-- <th width="40"><input name="" type="checkbox" value=""></th> -->
+					<th width="20">UID</th>
+					<th width="40">头像</th>
+					<th width="60">昵称</th>
+					<th width="50">认证信息</th>
+					<th width="60">加入时间</th>
+					<th width="60">微信openid</th>
+					<th width="20">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				{foreach name="data" item="v" key="k"}
+					<tr class="text-c">
+						<td>{$v.id}</td>
+						<td><img width="40" class="picture-thumb" src="{$v.photo}"></td>
+						<td class="text-l">
+							{$v.nickname}
+							{if $v.identity == 1}
+								<span class="c-red">（讲师）</span>
+							{/if}
+						</td>
+						<td class="text-c attest">
+							{if $v.name}<p>姓&nbsp;&nbsp;&nbsp;名：{$v.name}</p>{/if}
+							{if $v.tel}<p>手机号：{$v.tel}</p>{/if}
+							{if $v.ID_card}<p>身份证：{$v.ID_card}</p>{/if}
+						</td>
+						<td>{$v.create_time}</td>
+						<td>{$v.openid}</td>
+						<td class="td-manage">
+							<a onClick="attFalse('请填写拒绝理由','attFalse.html?id={$v.id}','540','200')" href="javascript:;" title="拒绝申请" class="btn btn-danger radius">拒绝</a>
+							<a onClick="attPass(this,'attPass.html?id={$v.id}')" href="javascript:;" title="认证通过" class="btn btn-success radius">通过</a>
+						</td>
+					</tr>
+				{/foreach}
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<!--_footer 作为公共模版分离出去-->
+{include file="Public:footer"}
+<!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="__STATIC__/../Admin/lib/My97DatePicker/4.8/WdatePicker.js"></script> 
+<script type="text/javascript" src="__STATIC__/../Admin/lib/datatables/1.10.0/jquery.dataTables.min.js"></script> 
+<script type="text/javascript" src="__STATIC__/../Admin/lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript">
+$('.table-sort').dataTable({
+	"aaSorting": [[ 1, "desc" ]],//默认第几个排序
+	"bStateSave": true,//状态保存
+    "aLengthMenu": [[5, 10, 20, -1], [5, 10, 20, "All"]],//指定每页显示条
+	"aoColumnDefs": [
+	  // {"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
+	  // {"orderable":false,"aTargets":[0,8]}// 制定列不参与排序
+	]
+});
+
+/*认证-拒绝*/
+function attFalse(title,url,w,h){
+	layer_show(title,url,w,h);
+}
+
+/*认证-通过*/
+function attPass(obj,url){
+	layer.confirm('确认要通过吗？',function(index){
+		$.ajax({
+			type: 		'POST',
+			url: 		url,
+			dataType: 	'json',
+			success:function(data){
+				if(data.status == 200){
+					layer.msg(data.msg,{icon: 6,time:1000});
+					location.replace(location.href);
+				}else{
+					layer.msg(data.msg,{icon: 5,time:1000});
+					location.replace(location.href);
+				}
+			}
+		});
+	});
+}
+</script>
+</body>
+</html>
